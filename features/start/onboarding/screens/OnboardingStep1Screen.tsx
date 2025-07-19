@@ -14,7 +14,7 @@ const EatIllustration = () => (
   />
 );
 
-const OnboardingStep1Screen = ({ onNext, onSkip }) => (
+const OnboardingStep1Screen = ({ onNext, onSkip }: { onNext: () => void, onSkip: () => void }) => (
   <View style={styles.container}>
     <OnboardingHeader onSkip={onSkip} />
     <OnboardingCard

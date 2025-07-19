@@ -5,7 +5,7 @@ import OnboardingStep3Screen from './screens/OnboardingStep3Screen';
 import useOnboardingSteps from './hooks/useOnboardingSteps';
 import { View } from 'react-native';
 
-const OnboardingFlow = ({ onFinish, onLogin }) => {
+const OnboardingFlow = ({ onFinish, onLogin }: { onFinish: () => void, onLogin: () => void }) => {
   const { step, next, steps, reset } = useOnboardingSteps();
 
   const handleSkip = () => {

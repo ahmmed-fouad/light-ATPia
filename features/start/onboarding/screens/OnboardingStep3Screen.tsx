@@ -14,7 +14,7 @@ const TrophyIllustration = () => (
   />
 );
 
-const OnboardingStep3Screen = ({ onStart, onLogin }) => (
+const OnboardingStep3Screen = ({ onStart, onLogin }: { onStart: () => void, onLogin: () => void }) => (
   <View style={styles.container}>
     <OnboardingHeader onLogin={onLogin} showLogin />
     <OnboardingCard

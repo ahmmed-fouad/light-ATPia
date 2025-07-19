@@ -1,8 +1,7 @@
-import React from 'react';
 import { useRouter } from 'expo-router';
-import { ForgotPasswordScreen } from '../../features/start/auth';
+import { GetInOptionsScreen } from '../../features/start/auth';
 
-const ForgotPassword = () => {
+const GetInOptions = () => {
   const router = useRouter();
 
   const handleNavigate = (screen: 'getInOptions' | 'login' | 'register' | 'forgotPassword') => {
@@ -14,10 +13,10 @@ const ForgotPassword = () => {
         router.push('/(auth)/register');
         break;
       case 'forgotPassword':
-        // Already on this screen
+        router.push('/(auth)/forgot-password');
         break;
       case 'getInOptions':
-        router.push('/(auth)/getInOptions');
+        // Already on this screen
         break;
     }
   };
@@ -27,11 +26,11 @@ const ForgotPassword = () => {
   };
 
   return (
-    <ForgotPasswordScreen
+    <GetInOptionsScreen
       onNavigate={handleNavigate}
       onGoHome={handleGoHome}
     />
   );
 };
 
-export default ForgotPassword;
+export default GetInOptions;

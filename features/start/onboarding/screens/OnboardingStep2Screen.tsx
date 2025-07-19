@@ -14,7 +14,7 @@ const TrackIllustration = () => (
   />
 );
 
-const OnboardingStep2Screen = ({ onNext, onSkip }) => (
+const OnboardingStep2Screen = ({ onNext, onSkip }: { onNext: () => void, onSkip: () => void }) => (
   <View style={styles.container}>
     <OnboardingHeader onSkip={onSkip} />
     <OnboardingCard
