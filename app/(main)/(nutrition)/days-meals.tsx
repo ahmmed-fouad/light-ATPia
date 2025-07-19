@@ -1,11 +1,7 @@
-import { View, Text } from 'react-native'
+import DaysMealsScreen from '../../../features/nutration/days-meals/screens/DaysMealsScreen';
 
 const DaysMeals = () => {
-    return (
-        <View>
-            <Text>Days Meals</Text>
-        </View>
-    )
-}
+  return <DaysMealsScreen />;
+};
 
 export default DaysMeals;
