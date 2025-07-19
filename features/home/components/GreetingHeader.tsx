@@ -24,13 +24,6 @@ const GreetingHeader: React.FC<GreetingHeaderProps> = ({
 }) => {
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
-      <View style={styles.row}>
-        <Image source={{ uri: avatarUrl }} style={styles.avatar} />
-        <Text style={styles.date}>{date}</Text>
-        <TouchableOpacity style={styles.calendarBtn} onPress={onCalendarPress}>
-          <Feather name="calendar" size={24} color="#fff" />
-        </TouchableOpacity>
-      </View>
       <Text style={styles.greeting}>{greeting}</Text>
       <View style={styles.summaryRow}>
         <Text style={styles.summary}>{summary} </Text>

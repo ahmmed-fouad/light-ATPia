@@ -3,14 +3,13 @@ import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
-  FlatList,
   Keyboard,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ScrollAwareFlatList } from '../../../../components';
 import { ChatInput, ChatMessage } from '../components/chat';
 import { useDrawer } from '../hooks/useDrawer';
 import { ChatService, streamChat } from '../services';
@@ -23,7 +22,7 @@ interface ChatScreenProps {
 export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [aiResponse, setAiResponse] = useState<string>("");
@@ -207,11 +206,11 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
      >
 
       {/* Messages */}
-      <FlatList
+      <ScrollAwareFlatList
         ref={flatListRef}
         data={currentChat?.messages || []}
         renderItem={renderMessage}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item: any) => item.id}
         style={styles.messagesList}
         contentContainerStyle={styles.messagesContainer}
         ListEmptyComponent={renderEmptyState}

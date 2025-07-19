@@ -1,13 +1,31 @@
-import { CustomBar } from "@/components";
+import BottomNavBar from "@/components/BottomNavBar";
 import { images } from "@/constans";
 import { ChatDrawer } from "@/features/ai/chatbot/components/drawer/ChatDrawer";
 import { ChatService } from "@/features/ai/chatbot/services/chatService";
 import { useChatStore } from "@/features/ai/chatbot/stores/chatStore";
-import { tabItemsV1 } from "@/shared/data/tabItems-v1";
+import { useHomeData } from "@/features/home/hooks/useHomeData";
+import { useScrollToHide } from "@/hooks/useScrollToHide";
+import { Feather } from "@expo/vector-icons";
 import { Slot, usePathname, useRouter } from "expo-router";
-import { Bell, HomeIcon, Menu, Search, Settings } from "lucide-react-native";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Bell, Menu } from "lucide-react-native";
+import { createContext, useContext } from "react";
+import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+// Create context for scroll state
+const ScrollContext = createContext<{
+  handleScroll: (event: any) => void;
+  topBarAnimation: Animated.Value;
+  isTopBarVisible: boolean;
+} | null>(null);
+
+export const useScrollContext = () => {
+  const context = useContext(ScrollContext);
+  if (!context) {
+    throw new Error('useScrollContext must be used within a ScrollProvider');
+  }
+  return context;
+};
 
 const MainLayout = () => {
   const router = useRouter();
@@ -15,6 +33,9 @@ const MainLayout = () => {
   const addChat = useChatStore((state) => state.addChat);
   const deleteChat = useChatStore((state) => state.deleteChat);
   const chats = useChatStore((state) => state.chats);
+
+  // Use scroll hook
+  const { handleScroll, topBarAnimation, isTopBarVisible } = useScrollToHide();
 
   // Simplified navigation mapping for Version 1 (including food scanner)
   const tabRoutes = {
@@ -24,8 +45,6 @@ const MainLayout = () => {
     nutrition: "/(main)/(nutrition)/diet-calculator",
     home: "/(main)/home",
   } as const;
-
-
 
   // Determine active tab based on current route
   const getActiveTab = () => {
@@ -49,12 +68,7 @@ const MainLayout = () => {
   const activeTab = getActiveTab();
   const isHomeScreen = activeTab === "home";
 
-  const handleTabPress = (tabName: keyof typeof tabRoutes) => {
-    const route = tabRoutes[tabName];
-    router.push(route as any); // Fix type error for new AI route
-  };
-
-  // Drawer navigation handlers
+  // Simplified drawer navigation handlers
   const handleNewChat = () => {
     const newChat = ChatService.createNewChat();
     addChat(newChat);
@@ -62,7 +76,7 @@ const MainLayout = () => {
   };
 
   const handleSelectChat = (chatId: string) => {
-    router.push(`/(main)/(ai)/chatbot/(chat)/${chatId}` as any); // Fix type error for new AI chat route
+    router.push(`/(main)/(ai)/chatbot/(chat)/${chatId}` as any);
   };
 
   const handleSelectSection = (section: "chats" | "library" | "explore") => {
@@ -74,113 +88,129 @@ const MainLayout = () => {
 
   const handleDeleteChat = (chatId: string) => {
     deleteChat(chatId);
-    // If we're currently on the deleted chat, navigate to a new chat or home
     if (pathname.includes(`/ai/(chat)/${chatId}`)) {
       router.push("/(main)/(ai)/chatbot" as any);
     }
   };
 
   const handleDeleteAllChats = () => {
-    // Delete all chats by clearing the chats array
     chats.forEach((chat) => {
       deleteChat(chat.id);
     });
-    // Navigate to AI home screen
     router.push("/(main)/(ai)/chatbot" as any);
   };
 
+  const handleTabPress = (tab: string) => {
+    const route = tabRoutes[tab as keyof typeof tabRoutes];
+    router.push(route as any);
+  };
+
+  const { homeData, loading } = useHomeData();
+
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      {/*1st Top Bar */}
-      {/* Logo & avatar*/}
-      <View
-        className="flex-row items-center justify-between px-4 
-        py-3 bg-white border-b border-gray-200"
-      >
-        <View className="flex-row items-center space-x-3">
-          <View className="flex-row items-center">
+    <ScrollContext.Provider
+      value={{ handleScroll, topBarAnimation, isTopBarVisible }}
+    >
+      <SafeAreaView className="flex-1 bg-white">
+        {/* Screen Content - Full Screen */}
+        <View className="flex-1">
+          <Slot />
+        </View>
+
+        {/* Animated Top Bar - Absolute Positioned */}
+        <Animated.View 
+          style={[
+            styles.topBar,
+            {
+              transform: [{ translateY: topBarAnimation }],
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1000,
+            }
+          ]}
+        >
+          <View className="flex-row items-center space-x-3">
+            {/* avatarr */}
+            <View className="flex-row items-center">
+              <Image
+                style={{ width: 60, height: 60, borderRadius: 100 }}
+                source={{ uri: homeData?.user.avatarUrl }}
+                resizeMode="contain"
+              />
+              <Text className="text-gray-500 ml-2 text-xl font-bold">User</Text>
+            </View>
+          </View>
+          <View style={styles.topBarRight}>
+            <TouchableOpacity onPress={() => {}}>
+              <Feather name="calendar" size={24} color="#374151" />
+            </TouchableOpacity>
+
+            {/* bell */}
+            <TouchableOpacity>
+              <Bell size={25} color="#374151" />
+            </TouchableOpacity>
+            {/* menu */}
+            <TouchableOpacity>
+              <Menu size={25} color="#374151" />
+            </TouchableOpacity>
+
+            {/* ATPiaLogo */}
             <Image
-              source={images.avatarr}
-              className="w-10 h-10"
+              source={images.ATPiaLogo}
+              style={{ width: 60, height: 60 }}
               resizeMode="contain"
             />
-            <Text className="text-gray-500 ml-2 text-xl font-bold">
-              User
-            </Text>
           </View>
-        </View>
-        <View className="flex-row items-center gap-2">
-          <Text className="text-gray-500 text-xl font-bold">ATPia</Text>
-          <Image
-            source={images.ATPiaLogo}
-            className="w-10 h-10"
-            resizeMode="contain"
-          />
-        </View>
-      </View>
+        </Animated.View>
 
-      {/* 2nd Top Bar */}
-      <View className="flex-row items-center space-x-3 justify-between px-4  bg-white border-b border-gray-200">
-        {/* Left Icons */}
-        <View className="flex-row items-center space-x-3  py-3 gap-4">
-          <TouchableOpacity>
-            <Menu size={25} color="#374151" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Bell size={25} color="#374151" />
-          </TouchableOpacity>
-        </View>
+        {/* Chat Drawer */}
+        <ChatDrawer
+          onNewChat={handleNewChat}
+          onSelectChat={handleSelectChat}
+          onSelectSection={handleSelectSection}
+          onProfilePress={() => {}}
+          onSettingsPress={() => {}}
+          onDeleteChat={handleDeleteChat}
+          onDeleteAllChats={handleDeleteAllChats}
+        />
 
-        {/* Search */}
-        <View className="flex-row items-center space-x-3 px-2 py-3 gap-2">
-          <TouchableOpacity
-            className="flex-row h-10 w-[160px] items-center
-             border border-gray-300 rounded-full px-4 py-2"
-          >
-            <Search size={25} color="#374151" />
-            <Text className="text-gray-500 ml-2 text-sm ">Search...</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Right Icons */}
-        <View className="flex-row items-center space-x-3  py-3 gap-4">
-          <TouchableOpacity>
-            <Settings size={25} color="#374151" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleTabPress("home")}>
-            <HomeIcon size={25} color={isHomeScreen ? "#3b82f6" : "#374151"} />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Screen Content - Expo Router handles this automatically */}
-      <View className="flex-1">
-        <Slot />
-      </View>
-
-      {/* Chat Drawer as a global portal */}
-      <ChatDrawer
-        onNewChat={handleNewChat}
-        onSelectChat={handleSelectChat}
-        onSelectSection={handleSelectSection}
-        onProfilePress={() => {}}
-        onSettingsPress={() => {}}
-        onDeleteChat={handleDeleteChat}
-        onDeleteAllChats={handleDeleteAllChats}
-      />
-
-      {/* Custom Bottom Bar */}
-      <CustomBar
-        tabItems={tabItemsV1}
-        activeTab={isHomeScreen ? "none" : activeTab}
-        onTabPress={handleTabPress}
-        inactiveIconColor="#9ca3af"
-        activeTextColor="#6366f1"
-      />
-
-
-    </SafeAreaView>
+        {/* Simplified Bottom Bar */}
+        <BottomNavBar activeTab={activeTab} onTabPress={handleTabPress} />
+      </SafeAreaView>
+    </ScrollContext.Provider>
   );
 };
 
-export default MainLayout;
+const styles = StyleSheet.create({
+  topBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+    height: 80, // Fixed height for consistent animation
+  },
+  topBarRight: {
+    flexDirection: "row",
+    gap: 20,
+    alignItems: "center",
+    backgroundColor: "#18b888",
+    // paddingVertical: 10,
+    paddingLeft: 30,
+    // paddingRight: 10,
+    borderRadius: 30,
+  },
+});
+
+export default MainLayout; 

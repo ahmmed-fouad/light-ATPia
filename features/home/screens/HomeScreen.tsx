@@ -1,21 +1,18 @@
-import React from "react";
+import { ScrollAwareView } from "@/components";
 import {
-  View,
-  ScrollView,
+  ActivityIndicator,
   StyleSheet,
   Text,
-  ActivityIndicator,
   TouchableOpacity,
+  View,
 } from "react-native";
-import GreetingHeader from "../components/GreetingHeader";
+import ActivityCard from "../components/ActivityCard";
 import CalorieProgress from "../components/CalorieProgress";
+import GreetingHeader from "../components/GreetingHeader";
 import MacroSummary from "../components/MacroSummary";
 import MealCard from "../components/MealCard";
 import WaterTracker from "../components/WaterTracker";
-import ActivityCard from "../components/ActivityCard";
-import BottomNavBar from "../../../components/BottomNavBar";
 import { useHomeData } from "../hooks/useHomeData";
-import { router } from "expo-router";
 
 const HomeScreen = () => {
   const { homeData, loading } = useHomeData();
@@ -28,15 +25,12 @@ const HomeScreen = () => {
     );
   }
 
-  const handleTabPress = (tab: string) => {
-    router.push("/(main)/home");
-  };
-
   return (
     <View style={styles.root}>
-      <ScrollView
+      <ScrollAwareView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        style={styles.scrollView}
       >
         <GreetingHeader
           avatarUrl={homeData.user.avatarUrl}
@@ -56,7 +50,7 @@ const HomeScreen = () => {
 
           }}
         >
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{
               backgroundColor: "#173430",
               padding: 10,
@@ -100,7 +94,7 @@ const HomeScreen = () => {
             <Text style={{ color: "#fff", fontSize: 16, fontWeight: "700" }}>
               Onboarding
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <CalorieProgress
           calories={homeData.calorieProgress.calories}
@@ -144,9 +138,8 @@ const HomeScreen = () => {
           activitiesCount={homeData.activity.activities.length}
           totalBurnt={homeData.activity.totalBurnt}
         />
-        <View style={{ height: 80 }} />
-      </ScrollView>
-      <BottomNavBar activeTab="home" onTabPress={() => handleTabPress} />
+        {/* <View style={{ height: 80 }} /> */}
+      </ScrollAwareView>
     </View>
   );
 };
@@ -155,6 +148,9 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  scrollView: {
+    paddingTop: 80, // Account for top bar height
   },
   scrollContent: {
     paddingBottom: 24,

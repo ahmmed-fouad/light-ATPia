@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     marginHorizontal: 17,
-    marginBottom: 55,
+    // marginBottom: 25,
     justifyContent: "space-between",
     alignItems: "center",
   },
