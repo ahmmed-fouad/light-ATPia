@@ -23,7 +23,7 @@ const Layout = () => {
         />
         <Stack.Screen
           name="forgot-password"
-          options={{ headerShown: true, title: "forgot-password" }}
+          options={{ headerShown: false, title: "forgot-password" }}
         />
         <Stack.Screen name="+not-found" />
       </Stack>

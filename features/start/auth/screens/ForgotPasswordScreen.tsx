@@ -1,7 +1,8 @@
+import { ChevronLeft } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { AuthButton, AuthInput } from '../components';
-import { COLORS, FONT_SIZES, FONT_WEIGHTS, SPACING } from '../constants/design';
+import { BORDER_RADIUS, COLORS, FONT_SIZES, FONT_WEIGHTS, SPACING } from '../constants/design';
 import { useAuthValidation } from '../hooks';
 import { AuthNavigationProps } from '../types';
 
@@ -62,23 +63,35 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
+      {/* Back Button */}
+      <View style={styles.backButton}>
+        <TouchableOpacity onPress={() => onNavigate('login')}>
+          <ChevronLeft size={35} color={COLORS.text.primary} />
+        </TouchableOpacity>
+      </View>
+
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Reset Password</Text>
+        <Text style={styles.title}>Reset Password 🔐</Text>
         <Text style={styles.subtitle}>Enter your email to receive reset instructions</Text>
       </View>
 
       {/* Form */}
       <View style={styles.form}>
-        <AuthInput
-          placeholder="Enter your email address"
-          value={email}
-          onChangeText={handleEmailChange}
-          type="email"
-          error={validation.email.message}
-          keyboardType="email-address"
-        />
+        <View style={styles.formContainer}>
+          <AuthInput
+            placeholder="Enter your email address"
+            value={email}
+            onChangeText={handleEmailChange}
+            type="email"
+            error={validation.email.message}
+            keyboardType="email-address"
+          />
+        </View>
 
         {/* Back to Login Link */}
         <View style={styles.backLinkContainer}>
@@ -94,7 +107,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           onPress={handleResetPassword}
           variant="primary"
           size="large"
-          icon="arrow-right"
+          icon="chevron-right"
           style={styles.resetButton}
         />
       </View>
@@ -112,8 +125,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.lg,
     paddingTop: SPACING.xl,
   },
+  backButton: {
+    position: "absolute",
+    top: SPACING.lg,
+    left: SPACING.lg,
+    backgroundColor: "#f7f7f7",
+    borderRadius: BORDER_RADIUS.full,
+    padding: SPACING.lg,
+  },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
+    marginTop: SPACING.xxl * 3,
     marginBottom: SPACING.xxl,
   },
   title: {
@@ -129,11 +151,15 @@ const styles = StyleSheet.create({
   },
   form: {
     flex: 1,
+    marginTop: SPACING.xxl,
+  },
+  formContainer: {
+    flex: 1,
   },
   backLinkContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: SPACING.xl,
+    marginBottom: SPACING.xs,
   },
   backLinkText: {
     fontSize: FONT_SIZES.md,
@@ -145,7 +171,14 @@ const styles = StyleSheet.create({
     fontWeight: FONT_WEIGHTS.medium,
   },
   resetButton: {
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: SPACING.lg,
+    marginBottom: SPACING.xxl * 1.3,
+    borderRadius: BORDER_RADIUS.full,
+    paddingVertical: SPACING.lg,
+    paddingHorizontal: SPACING.xl,
+    backgroundColor: "#173430",
   },
   successContainer: {
     flex: 1,
@@ -179,8 +212,5 @@ const styles = StyleSheet.create({
     color: COLORS.text.secondary,
     textAlign: 'center',
     marginBottom: SPACING.xl,
-  },
-  backButton: {
-    marginTop: SPACING.lg,
   },
 }); 

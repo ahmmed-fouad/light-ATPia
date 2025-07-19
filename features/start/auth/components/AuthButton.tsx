@@ -1,16 +1,16 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import { ArrowRight, ArrowLeft } from 'lucide-react-native';
+import { ChevronRight, ChevronLeft } from "lucide-react-native";
 import { COLORS, SPACING, BORDER_RADIUS, FONT_SIZES, FONT_WEIGHTS } from '../constants/design';
 
 interface AuthButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline' | 'text';
-  size?: 'small' | 'medium' | 'large';
+  variant?: "primary" | "secondary" | "outline" | "text";
+  size?: "small" | "medium" | "large";
   disabled?: boolean;
   loading?: boolean;
-  icon?: 'arrow-right' | 'arrow-left' | React.ReactNode;
+  icon?: "chevron-right" | "chevron-left" | React.ReactNode;
   style?: ViewStyle;
   textStyle?: TextStyle;
 }
@@ -71,6 +71,7 @@ export const AuthButton: React.FC<AuthButtonProps> = ({
       case 'primary':
         return {
           ...baseStyle,
+          // color: "#18b888",
           color: COLORS.background,
         };
       case 'secondary':
@@ -134,10 +135,22 @@ export const AuthButton: React.FC<AuthButtonProps> = ({
 
     if (typeof icon === 'string') {
       switch (icon) {
-        case 'arrow-right':
-          return <ArrowRight size={20} color={getTextStyle().color} style={{ marginLeft: SPACING.sm }} />;
-        case 'arrow-left':
-          return <ArrowLeft size={20} color={getTextStyle().color} style={{ marginRight: SPACING.sm }} />;
+        case "chevron-right":
+          return (
+            <ChevronRight
+              size={25}
+              color="#18b888"
+              style={{ marginLeft: SPACING.sm }}
+            />
+          );
+        case "chevron-left":
+          return (
+            <ChevronLeft
+              size={25}
+              color={getTextStyle().color}
+              style={{ marginRight: SPACING.sm }}
+            />
+          );
         default:
           return null;
       }
@@ -153,11 +166,12 @@ export const AuthButton: React.FC<AuthButtonProps> = ({
       disabled={disabled || loading}
       activeOpacity={0.8}
     >
-      {icon === 'arrow-left' && renderIcon()}
+      {icon === "chevron-left" && renderIcon()}
       <Text style={[getTextStyle(), { fontSize: getTextSize() }, textStyle]}>
-        {loading ? 'Loading...' : title}
+        {loading ? "Loading..." : title}
       </Text>
-      {(icon === 'arrow-right' || (icon && typeof icon !== 'string')) && renderIcon()}
+      {(icon === "chevron-right" || (icon && typeof icon !== "string")) &&
+        renderIcon()}
     </TouchableOpacity>
   );
 }; 

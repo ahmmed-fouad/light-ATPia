@@ -1,4 +1,4 @@
-import { Fingerprint } from 'lucide-react-native';
+import { ChevronLeft, Fingerprint } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { AuthButton, AuthInput } from '../components';
@@ -58,50 +58,62 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
       {/* Header */}
+
+      <View style={styles.backButton}>
+        <TouchableOpacity onPress={() => onNavigate('getInOptions')}>
+          <ChevronLeft size={35} color={COLORS.text.primary} />
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.header}>
-        <Text style={styles.title}>Welcome Back</Text>
+        <Text style={styles.title}>Welcome Back 👋</Text>
         <Text style={styles.subtitle}>Hi there, you've been missed</Text>
       </View>
 
       {/* Form */}
       <View style={styles.form}>
-        <AuthInput
-          placeholder="samantha123@email.com"
-          value={formData.email}
-          onChangeText={handleEmailChange}
-          type="email"
-          error={validation.email.message}
-          keyboardType="email-address"
-        />
-
-        <View style={styles.passwordContainer}>
-          <View style={styles.passwordInputContainer}>
-            <AuthInput
-              placeholder="........"
-              value={formData.password}
-              onChangeText={handlePasswordChange}
-              type="password"
-              error={validation.password.message}
-            />
+       <View style={styles.formContainer}>
+          <AuthInput
+            placeholder="samantha123@email.com"
+            value={formData.email}
+            onChangeText={handleEmailChange}
+            type="email"
+            error={validation.email.message}
+            keyboardType="email-address"
+          />
+  
+          <View style={styles.passwordContainer}>
+            <View style={styles.passwordInputContainer}>
+              <AuthInput
+                placeholder="........"
+                value={formData.password}
+                onChangeText={handlePasswordChange}
+                type="password"
+                error={validation.password.message}
+              />
+            </View>
+  
+            <TouchableOpacity
+              style={styles.biometricButton}
+              onPress={handleBiometricLogin}
+              activeOpacity={0.8}
+            >
+              <Fingerprint size={28} color={COLORS.background} />
+            </TouchableOpacity>
           </View>
-          
-          <TouchableOpacity
-            style={styles.biometricButton}
-            onPress={handleBiometricLogin}
-            activeOpacity={0.8}
-          >
-            <Fingerprint size={24} color={COLORS.background} />
-          </TouchableOpacity>
-        </View>
+       </View>
 
         {/* Forgot Password & Create Account */}
         <View style={styles.linksContainer}>
           <TouchableOpacity onPress={handleForgotPassword}>
             <Text style={styles.linkText}>Forgot password?</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity onPress={handleCreateAccount}>
             <Text style={styles.linkText}>Create account</Text>
           </TouchableOpacity>
@@ -113,7 +125,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           onPress={handleLogin}
           variant="primary"
           size="large"
-          icon="arrow-right"
+          icon="chevron-right"
           style={styles.loginButton}
         />
       </View>
@@ -131,8 +143,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.lg,
     paddingTop: SPACING.xl,
   },
+  backButton: {
+    position: "absolute",
+    top: SPACING.lg,
+    left: SPACING.lg,
+    backgroundColor: "#f7f7f7",
+    borderRadius: BORDER_RADIUS.full,
+    padding: SPACING.lg,
+  },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
+    marginTop: SPACING.xxl * 3,
     marginBottom: SPACING.xxl,
   },
   title: {
@@ -147,10 +168,14 @@ const styles = StyleSheet.create({
   },
   form: {
     flex: 1,
+    marginTop: SPACING.xxl,
+  },
+  formContainer: {
+    flex: 1,
   },
   passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: SPACING.lg,
   },
   passwordInputContainer: {
@@ -158,18 +183,17 @@ const styles = StyleSheet.create({
     marginRight: SPACING.md,
   },
   biometricButton: {
-    width: 56,
-    height: 56,
     backgroundColor: COLORS.secondary,
     borderRadius: BORDER_RADIUS.full,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: SPACING.lg,
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: SPACING.md,
   },
   linksContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: SPACING.xl,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: SPACING.xs,
   },
   linkText: {
     fontSize: FONT_SIZES.md,
@@ -177,6 +201,13 @@ const styles = StyleSheet.create({
     fontWeight: FONT_WEIGHTS.medium,
   },
   loginButton: {
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: SPACING.lg,
+    marginBottom: SPACING.xxl * 1.3,
+    borderRadius: BORDER_RADIUS.full,
+    paddingVertical: SPACING.lg,
+    paddingHorizontal: SPACING.xl,
+    backgroundColor: "#173430",
   },
 }); 

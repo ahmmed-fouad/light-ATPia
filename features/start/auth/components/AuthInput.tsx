@@ -1,4 +1,13 @@
-import { Check, Eye, EyeOff, Lock, Mail, User } from 'lucide-react-native';
+import {
+  Check,
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+  User,
+  LockKeyholeOpen,
+  LockKeyhole,
+} from "lucide-react-native";
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { BORDER_RADIUS, COLORS, FONT_SIZES, FONT_WEIGHTS, SPACING } from '../constants/design';
@@ -31,20 +40,20 @@ export const AuthInput: React.FC<AuthInputProps> = ({
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
-  const getIcon = () => {
-    if (icon) return icon;
+  // const getIcon = () => {
+  //   if (icon) return icon;
     
-    switch (type) {
-      case 'email':
-        return <Mail size={20} color={isFocused ? COLORS.secondary : COLORS.text.secondary} />;
-      case 'password':
-        return <Lock size={20} color={isFocused ? COLORS.secondary : COLORS.text.secondary} />;
-      case 'name':
-        return <User size={20} color={isFocused ? COLORS.secondary : COLORS.text.secondary} />;
-      default:
-        return null;
-    }
-  };
+  //   switch (type) {
+  //     case 'email':
+  //       return <Mail size={20} color={isFocused ? COLORS.secondary : COLORS.text.secondary} />;
+  //     case 'password':
+  //       return <Lock size={20} color={isFocused ? COLORS.secondary : COLORS.text.secondary} />;
+  //     case 'name':
+  //       return <User size={20} color={isFocused ? COLORS.secondary : COLORS.text.secondary} />;
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   const getInputType = () => {
     if (type === 'password') {
@@ -65,39 +74,49 @@ export const AuthInput: React.FC<AuthInputProps> = ({
 
   return (
     <View style={styles.container}>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {/* {label && <Text style={styles.label}>{label}</Text>} */}
       <View style={inputStyle}>
-        {getIcon() && (
-          <View style={styles.iconContainer}>
-            {getIcon()}
-          </View>
-        )}
         <TextInput
           style={styles.textInput}
           placeholder={placeholder}
           placeholderTextColor={COLORS.text.light}
           value={value}
           onChangeText={onChangeText}
-          secureTextEntry={getInputType() === 'password'}
+          secureTextEntry={getInputType() === "password"}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           autoCapitalize={autoCapitalize}
           autoCorrect={autoCorrect}
           keyboardType={keyboardType}
         />
-        {type === 'password' && (
+
+        {/* {getIcon() && <View style={styles.iconContainer}>{getIcon()}</View>} */}
+
+        {type === "password" && (
           <TouchableOpacity
             style={styles.eyeIcon}
             onPress={togglePasswordVisibility}
           >
-            {isPasswordVisible ? (
+            {/* {isPasswordVisible ? (
               <EyeOff size={20} color={COLORS.text.secondary} />
             ) : (
               <Eye size={20} color={COLORS.text.secondary} />
+            )} */}
+            {isPasswordVisible ? (
+              <LockKeyholeOpen size={20} color="#10B981" />
+            ) : (
+              <LockKeyhole size={20} color="#10B981" />
             )}
+
           </TouchableOpacity>
+
         )}
-        {type === 'email' && value && !error && (
+        {type === "email" && (
+          <View style={styles.iconContainer}>
+            <Mail size={20} color="#10B981" />
+          </View>
+        )}
+        {type === "email" && value && !error && (
           <View style={styles.checkIcon}>
             <Check size={16} color={COLORS.secondary} />
           </View>
@@ -123,8 +142,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLORS.input.background,
     borderWidth: 1,
-    borderColor: COLORS.border.primary,
-    borderRadius: BORDER_RADIUS.md,
+    borderColor: '#1F2937',
+    borderRadius: BORDER_RADIUS.full,
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.md,
     minHeight: 56,

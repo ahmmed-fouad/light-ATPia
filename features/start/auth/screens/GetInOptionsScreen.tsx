@@ -1,12 +1,21 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { X } from 'lucide-react-native';
+import LottieView from 'lottie-react-native';
+import { Apple, Chrome, Mail, X } from 'lucide-react-native';
 import React from 'react';
-import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { SocialButton } from '../components';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { BORDER_RADIUS, COLORS, FONT_SIZES, FONT_WEIGHTS, SPACING } from '../constants/design';
 import { AuthNavigationProps } from '../types';
 
 interface GetInOptionsScreenProps extends AuthNavigationProps {}
+
+const TrophyIllustration = () => (
+  <LottieView
+    source={require('../../../../assets/lottie/trophy.json')}
+    autoPlay
+    loop
+    style={{ width: 220, height: 220 }}
+  />
+);
 
 export const GetInOptionsScreen: React.FC<GetInOptionsScreenProps> = ({
   onNavigate,
@@ -26,66 +35,74 @@ export const GetInOptionsScreen: React.FC<GetInOptionsScreenProps> = ({
     console.log('Google login pressed');
   };
 
-  const handleHomePress = () => {
+  const handleCancelPress = () => {
     onGoHome();
   };
 
   return (
     <View style={styles.container}>
-      {/* Blurred Background */}
-      <ImageBackground
-        source={{ uri: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=800&q=80' }}
-        style={styles.backgroundImage}
-        blurRadius={10}
-      >
+      {/* Blurred Background - Same as OnboardingStep3Screen */}
+      <View style={styles.backgroundContainer}>
         <LinearGradient
-          colors={['rgba(16, 185, 129, 0.3)', 'rgba(31, 41, 55, 0.3)']}
-          style={styles.overlay}
+          colors={['rgba(16, 185, 129, 0.1)', 'rgba(31, 41, 55, 0.1)']}
+          style={styles.backgroundGradient}
         >
-          {/* Blurred Character Illustration */}
+          {/* Blurred Trophy Illustration */}
           <View style={styles.illustrationContainer}>
-            <View style={styles.character} />
-            <View style={styles.trophy} />
+            <View style={styles.blurredTrophy}>
+              <TrophyIllustration />
+            </View>
             <View style={styles.circleIcon} />
             <View style={styles.rectButton} />
           </View>
         </LinearGradient>
-      </ImageBackground>
+      </View>
 
       {/* Modal Sheet */}
       <View style={styles.modalContainer}>
-        <LinearGradient
-          colors={['rgba(255, 255, 255, 0.95)', 'rgba(255, 255, 255, 0.98)']}
-          style={styles.modal}
-        >
-          {/* Social Buttons */}
-          <View style={styles.socialButtonsContainer}>
-            <SocialButton
-              type="email"
+        <View style={styles.modal}>
+          {/* Social Buttons Card */}
+          <View style={styles.socialButtonsCard}>
+            <TouchableOpacity
+              style={styles.socialButton}
               onPress={handleEmailPress}
-            />
-            <View style={styles.divider} />
-            <SocialButton
-              type="apple"
+              activeOpacity={0.8}
+            >
+              <Text style={styles.socialButtonText}>Continue with Email</Text>
+              <Mail size={25} color="#10B981" />
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={styles.socialButton}
               onPress={handleApplePress}
-            />
-            <View style={styles.divider} />
-            <SocialButton
-              type="google"
+              activeOpacity={0.8}
+            >
+              <Text style={styles.socialButtonText}>Continue with Apple</Text>
+              <Apple size={25} color={COLORS.text.primary} />
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={styles.socialButton}
               onPress={handleGooglePress}
-            />
+              activeOpacity={0.8}
+            >
+              <Text style={styles.socialButtonText}>Continue with Google</Text>
+              <Chrome size={25} color={COLORS.secondary} />
+            </TouchableOpacity>
           </View>
 
-          {/* Home Button */}
-          <TouchableOpacity
-            style={styles.homeButton}
-            onPress={handleHomePress}
-            activeOpacity={0.8}
-          >
-            <X size={20} color={COLORS.error} />
-            <Text style={styles.homeButtonText}>Home</Text>
-          </TouchableOpacity>
-        </LinearGradient>
+          {/* Cancel Button Card - Separated */}
+          <View style={styles.cancelButtonCard}>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={handleCancelPress}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+              <X size={16} color={COLORS.error} />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -94,13 +111,16 @@ export const GetInOptionsScreen: React.FC<GetInOptionsScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f8f9fa',
   },
-  backgroundImage: {
+  backgroundContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backgroundGradient: {
     flex: 1,
     width: '100%',
-  },
-  overlay: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -108,25 +128,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  character: {
-    position: 'absolute',
-    top: '30%',
-    left: '50%',
-    width: 120,
-    height: 120,
-    backgroundColor: 'rgba(16, 185, 129, 0.3)',
-    borderRadius: 60,
-    transform: [{ translateX: -60 }],
-  },
-  trophy: {
-    position: 'absolute',
-    top: '25%',
-    left: '30%',
-    width: 60,
-    height: 80,
-    backgroundColor: 'rgba(16, 185, 129, 0.4)',
-    borderRadius: 30,
+  blurredTrophy: {
+    opacity: 0.3,
+    transform: [{ scale: 0.8 }],
   },
   circleIcon: {
     position: 'absolute',
@@ -134,7 +141,7 @@ const styles = StyleSheet.create({
     left: '10%',
     width: 40,
     height: 40,
-    backgroundColor: 'rgba(16, 185, 129, 0.5)',
+    backgroundColor: 'rgba(16, 185, 129, 0.3)',
     borderRadius: 20,
   },
   rectButton: {
@@ -143,44 +150,71 @@ const styles = StyleSheet.create({
     right: '10%',
     width: 80,
     height: 40,
-    backgroundColor: 'rgba(16, 185, 129, 0.4)',
-    borderRadius: 20,
+    // backgroundColor: 'rgba(16, 185, 129, 0.3)',
+    // borderRadius: 20,
   },
   modalContainer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: '65%',
+    // borderTopLeftRadius: BORDER_RADIUS.xl,
+    // borderTopRightRadius: BORDER_RADIUS.xl,
+    // paddingHorizontal: SPACING.lg,
+    // paddingTop: SPACING.xl,
+    paddingBottom: SPACING.xl * 2,
   },
   modal: {
     flex: 1,
-    borderTopLeftRadius: BORDER_RADIUS.xl,
-    borderTopRightRadius: BORDER_RADIUS.xl,
-    paddingHorizontal: SPACING.lg,
-    paddingTop: SPACING.xl,
-    paddingBottom: SPACING.lg,
+  },
+  socialButtonsCard: {
+    marginHorizontal: SPACING.md,
+    marginBottom: SPACING.lg,
+    backgroundColor: COLORS.background,
+    borderRadius: BORDER_RADIUS.xl *1.5,
+    // padding: SPACING.md,
   },
   socialButtonsContainer: {
     flex: 1,
     justifyContent: 'center',
+    marginHorizontal: SPACING.md,
   },
-  divider: {
-    height: 1,
-    backgroundColor: COLORS.border.primary,
-    marginVertical: SPACING.sm,
-  },
-  homeButton: {
+  socialButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: SPACING.md,
-    marginTop: SPACING.lg,
+    justifyContent: 'space-between',
+    paddingVertical: SPACING.lg,
+    paddingHorizontal: SPACING.lg,
+    // marginVertical: SPACING.xs,
+    // backgroundColor: COLORS.background,
+    borderRadius: BORDER_RADIUS.full,
+    borderBottomWidth: 1,
+    borderColor: COLORS.border.primary,
   },
-  homeButtonText: {
+  socialButtonText: {
+    fontSize: FONT_SIZES.lg,
+    fontWeight: FONT_WEIGHTS.medium,
+    color: COLORS.text.primary,
+  },
+  cancelButtonCard: {
+    marginHorizontal: SPACING.md,
+    // marginTop: SPACING.lg,
+    backgroundColor: COLORS.background,
+    borderRadius: BORDER_RADIUS.full,
+    paddingHorizontal: SPACING.md,
+  },
+  cancelButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: SPACING.lg,
+    paddingHorizontal: SPACING.lg,
+    backgroundColor: COLORS.background,
+    borderRadius: BORDER_RADIUS.xl,
+  },
+  cancelButtonText: {
     fontSize: FONT_SIZES.md,
     fontWeight: FONT_WEIGHTS.medium,
     color: COLORS.error,
-    marginLeft: SPACING.sm,
   },
 }); 
