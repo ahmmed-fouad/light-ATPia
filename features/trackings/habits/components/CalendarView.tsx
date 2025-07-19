@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { View, Text, Platform } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { calendarDemo } from '../data/habitsData';

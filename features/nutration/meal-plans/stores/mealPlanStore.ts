@@ -9,7 +9,6 @@ import {
   MealPlanSort,
   MealPlanProgress,
   WeeklyStats,
-  MealPlanInsight
 } from '../types';
 import { MealPlanService } from '../services/mealPlanService';
 

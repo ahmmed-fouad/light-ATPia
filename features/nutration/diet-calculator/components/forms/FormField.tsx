@@ -1,7 +1,8 @@
-import React from 'react';
+// import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronDown } from 'lucide-react-native';
+import { useState } from 'react';
 
 interface FormFieldProps {
   label: string;
@@ -38,7 +39,7 @@ export const FormField: React.FC<FormFieldProps> = ({
   unit,
   required = false
 }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleTextChange = (text: string) => {
     if (type === 'number') {

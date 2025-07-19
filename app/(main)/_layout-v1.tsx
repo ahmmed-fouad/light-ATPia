@@ -9,7 +9,7 @@ import { Bell, HomeIcon, Menu, Search, Settings } from "lucide-react-native";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const MainLayout = () => {
+const MainLayoutV1 = () => {
   const router = useRouter();
   const pathname = usePathname();
   const addChat = useChatStore((state) => state.addChat);
@@ -24,8 +24,6 @@ const MainLayout = () => {
     nutrition: "/(main)/(nutrition)/diet-calculator",
     home: "/(main)/home",
   } as const;
-
-
 
   // Determine active tab based on current route
   const getActiveTab = () => {
@@ -51,10 +49,10 @@ const MainLayout = () => {
 
   const handleTabPress = (tabName: keyof typeof tabRoutes) => {
     const route = tabRoutes[tabName];
-    router.push(route as any); // Fix type error for new AI route
+    router.push(route as any);
   };
 
-  // Drawer navigation handlers
+  // Simplified drawer navigation handlers
   const handleNewChat = () => {
     const newChat = ChatService.createNewChat();
     addChat(newChat);
@@ -62,7 +60,7 @@ const MainLayout = () => {
   };
 
   const handleSelectChat = (chatId: string) => {
-    router.push(`/(main)/(ai)/chatbot/(chat)/${chatId}` as any); // Fix type error for new AI chat route
+    router.push(`/(main)/(ai)/chatbot/(chat)/${chatId}` as any);
   };
 
   const handleSelectSection = (section: "chats" | "library" | "explore") => {
@@ -74,29 +72,22 @@ const MainLayout = () => {
 
   const handleDeleteChat = (chatId: string) => {
     deleteChat(chatId);
-    // If we're currently on the deleted chat, navigate to a new chat or home
     if (pathname.includes(`/ai/(chat)/${chatId}`)) {
       router.push("/(main)/(ai)/chatbot" as any);
     }
   };
 
   const handleDeleteAllChats = () => {
-    // Delete all chats by clearing the chats array
     chats.forEach((chat) => {
       deleteChat(chat.id);
     });
-    // Navigate to AI home screen
     router.push("/(main)/(ai)/chatbot" as any);
   };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/*1st Top Bar */}
-      {/* Logo & avatar*/}
-      <View
-        className="flex-row items-center justify-between px-4 
-        py-3 bg-white border-b border-gray-200"
-      >
+      {/* Simplified Top Bar */}
+      <View className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-200">
         <View className="flex-row items-center space-x-3">
           <View className="flex-row items-center">
             <Image
@@ -119,10 +110,9 @@ const MainLayout = () => {
         </View>
       </View>
 
-      {/* 2nd Top Bar */}
-      <View className="flex-row items-center space-x-3 justify-between px-4  bg-white border-b border-gray-200">
-        {/* Left Icons */}
-        <View className="flex-row items-center space-x-3  py-3 gap-4">
+      {/* Simplified Second Bar */}
+      <View className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-200">
+        <View className="flex-row items-center space-x-3 gap-4">
           <TouchableOpacity>
             <Menu size={25} color="#374151" />
           </TouchableOpacity>
@@ -131,19 +121,14 @@ const MainLayout = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Search */}
-        <View className="flex-row items-center space-x-3 px-2 py-3 gap-2">
-          <TouchableOpacity
-            className="flex-row h-10 w-[160px] items-center
-             border border-gray-300 rounded-full px-4 py-2"
-          >
+        <View className="flex-row items-center space-x-3 px-2 gap-2">
+          <TouchableOpacity className="flex-row h-10 w-[160px] items-center border border-gray-300 rounded-full px-4 py-2">
             <Search size={25} color="#374151" />
-            <Text className="text-gray-500 ml-2 text-sm ">Search...</Text>
+            <Text className="text-gray-500 ml-2 text-sm">Search...</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Right Icons */}
-        <View className="flex-row items-center space-x-3  py-3 gap-4">
+        <View className="flex-row items-center space-x-3 gap-4">
           <TouchableOpacity>
             <Settings size={25} color="#374151" />
           </TouchableOpacity>
@@ -153,12 +138,12 @@ const MainLayout = () => {
         </View>
       </View>
 
-      {/* Screen Content - Expo Router handles this automatically */}
+      {/* Screen Content */}
       <View className="flex-1">
         <Slot />
       </View>
 
-      {/* Chat Drawer as a global portal */}
+      {/* Chat Drawer */}
       <ChatDrawer
         onNewChat={handleNewChat}
         onSelectChat={handleSelectChat}
@@ -169,7 +154,7 @@ const MainLayout = () => {
         onDeleteAllChats={handleDeleteAllChats}
       />
 
-      {/* Custom Bottom Bar */}
+      {/* Simplified Bottom Bar */}
       <CustomBar
         tabItems={tabItemsV1}
         activeTab={isHomeScreen ? "none" : activeTab}
@@ -177,10 +162,8 @@ const MainLayout = () => {
         inactiveIconColor="#9ca3af"
         activeTextColor="#6366f1"
       />
-
-
     </SafeAreaView>
   );
 };
 
-export default MainLayout;
+export default MainLayoutV1; 

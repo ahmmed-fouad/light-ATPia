@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Camera, Image as ImageIcon, Upload } from 'lucide-react-native';

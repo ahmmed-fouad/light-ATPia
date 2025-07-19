@@ -1,5 +1,4 @@
-
-import React from 'react';
+// import React from 'react';
 import { View, Text, Platform, Dimensions } from 'react-native';
 import { TrendingUp, Flame, Footprints, Droplet } from 'lucide-react-native';
 import type { Stat } from '../types/index';

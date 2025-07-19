@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { View, ScrollView, StyleSheet, Platform } from 'react-native';
 import { useHabitsStore } from '../stores/habitsStore';
 import { LinearGradient } from 'expo-linear-gradient';

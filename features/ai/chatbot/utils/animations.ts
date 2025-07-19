@@ -1,4 +1,5 @@
-import React from 'react';
+// import React from 'react';  
+import { useEffect } from 'react';
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -9,7 +10,7 @@ import {
 export const useFadeAnimation = (isVisible: boolean, duration: number = 300) => {
   const opacity = useSharedValue(0);
 
-  React.useEffect(() => {
+useEffect(() => {
     opacity.value = withTiming(isVisible ? 1 : 0, { duration });
   }, [isVisible, duration]);
 
@@ -29,7 +30,7 @@ export const useSlideAnimation = (
   const translateY = useSharedValue(direction === 'up' ? distance : 0);
   const translateX = useSharedValue(direction === 'left' ? distance : 0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (direction === 'up' || direction === 'down') {
       translateY.value = withSpring(
         isVisible ? 0 : (direction === 'up' ? distance : -distance),
@@ -56,7 +57,7 @@ export const useSlideAnimation = (
 export const useScaleAnimation = (isVisible: boolean, duration: number = 300) => {
   const scale = useSharedValue(0.8);
 
-  React.useEffect(() => {
+  useEffect(() => {
     scale.value = withSpring(isVisible ? 1 : 0.8, {
       damping: 15,
       stiffness: 100,
@@ -73,7 +74,7 @@ export const useScaleAnimation = (isVisible: boolean, duration: number = 300) =>
 export const useBounceAnimation = (isVisible: boolean) => {
   const scale = useSharedValue(0.3);
 
-  React.useEffect(() => {
+  useEffect(() => {
     scale.value = withSpring(isVisible ? 1 : 0.3, {
       damping: 8,
       stiffness: 100,
@@ -91,7 +92,7 @@ export const useDrawerAnimation = (isOpen: boolean, drawerWidth: number) => {
   const translateX = useSharedValue(-drawerWidth);
   const overlayOpacity = useSharedValue(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       translateX.value = withSpring(0, { damping: 15, stiffness: 100 });
       overlayOpacity.value = withTiming(0.5, { duration: 300 });

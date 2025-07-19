@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { View, Text, TouchableOpacity, TextInput, Platform } from 'react-native';
 import { FileText } from 'lucide-react-native';
 import type { NotesJournalProps } from '../types/index';

@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { FeatureCardData } from '../types';
 import { FeatureChart } from './FeatureChart';

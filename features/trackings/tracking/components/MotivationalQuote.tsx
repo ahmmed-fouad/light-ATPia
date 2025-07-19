@@ -1,5 +1,4 @@
-
-import React from 'react';
+// import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Trophy } from 'lucide-react-native';
 import type { MotivationalQuoteProps } from '../types/index';

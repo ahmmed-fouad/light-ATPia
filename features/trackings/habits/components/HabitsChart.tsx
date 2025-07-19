@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { View, Text, TouchableOpacity, Dimensions, Platform } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useHabitsStore } from '../stores/habitsStore';

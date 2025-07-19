@@ -1,5 +1,4 @@
-
-import React from 'react';
+// import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import type { MetricOption, ProgressDataPoint } from '../types/index';

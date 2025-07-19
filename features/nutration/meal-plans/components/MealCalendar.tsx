@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MealPlan, Meal } from '../types';

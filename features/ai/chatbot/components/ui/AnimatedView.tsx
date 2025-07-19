@@ -1,4 +1,5 @@
-import React from 'react';
+// import React from 'react';
+import { useEffect } from 'react';
 import { ViewProps } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -31,7 +32,7 @@ export const AnimatedView: React.FC<AnimatedViewProps> = ({
   const translateX = useSharedValue(0);
   const scale = useSharedValue(0.8);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isVisible) {
       opacity.value = withTiming(1, { duration });
       

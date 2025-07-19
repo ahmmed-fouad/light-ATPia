@@ -1,11 +1,8 @@
 import { 
   MealPlan, 
   Meal, 
-  Ingredient, 
-  NutritionFacts, 
   AIPreferences,
   MealPlanFilters,
-  MealPlanRecommendation,
   MealPlanInsight,
   ChartData
 } from '../types';

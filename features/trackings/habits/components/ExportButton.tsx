@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { TouchableOpacity, Text, View, Platform } from 'react-native';
 import { FileText } from 'lucide-react-native';
 

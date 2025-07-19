@@ -1,7 +1,7 @@
-import NotificationsScreen from '../../features/notifications/screens/NotificationsScreen';
+// import NotificationsScreen from '../../features/notifications/screens/NotificationsScreen';
 
-const Notifications = () => {
-  return <NotificationsScreen />;
-};
+// const Notifications = () => {
+//   return <NotificationsScreen />;
+// };
 
-export default Notifications;
+// export default Notifications;

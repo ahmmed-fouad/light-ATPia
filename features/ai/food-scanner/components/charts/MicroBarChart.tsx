@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react';
+// import React from 'react';
 import { Dimensions, Text, View } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import { MicroChartData } from '../../types';

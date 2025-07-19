@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { View, Text, TouchableOpacity, Platform } from 'react-native';
 import { useHabitsStore } from '../stores/habitsStore';
 import { motivationalQuotes } from '../data/habitsData';

@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { View, Text, TextInput, Platform } from 'react-native';
 import { useHabitsStore } from '../stores/habitsStore';
 

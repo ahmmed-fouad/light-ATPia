@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { HeroSection } from '../components/HeroSection';

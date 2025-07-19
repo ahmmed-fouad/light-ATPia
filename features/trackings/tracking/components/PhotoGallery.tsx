@@ -1,5 +1,4 @@
-
-import React from 'react';
+// import React from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, Platform } from 'react-native';
 import { Camera } from 'lucide-react-native';
 import type { PhotoGalleryProps } from '../types/index';

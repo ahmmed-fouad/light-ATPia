@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { FoodItem } from '../../types';
+import { Heart, Plus, Share2 } from 'lucide-react-native';
+import * as React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { FoodScannerService } from '../../services/foodScannerService';
-import { Plus, Heart, Share2 } from 'lucide-react-native';
+import { FoodItem } from '../../types';
 
 interface FoodInfoCardProps {
   food: FoodItem;

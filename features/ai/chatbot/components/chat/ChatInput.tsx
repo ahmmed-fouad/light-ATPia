@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -9,8 +9,6 @@ import {
   View
 } from 'react-native';
 import { AI_CONSTANTS } from '../../utils/constants';
-import { EmojiKeyboard } from './EmojiKeyboard';
-
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
   onEmojiPress?: () => void;
@@ -92,12 +90,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-
-      <EmojiKeyboard
-        isVisible={showEmojiKeyboard}
-        onClose={() => setShowEmojiKeyboard(false)}
-        onEmojiSelected={handleEmojiSelected}
-      />
     </>
   );
 };

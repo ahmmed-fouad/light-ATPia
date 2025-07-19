@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Utensils, Clock, Target } from 'lucide-react-native';

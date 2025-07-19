@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+// import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { DrawerBodyProps } from '../../types/drawer';
 import { ChatHistoryItem } from './ChatHistoryItem';
