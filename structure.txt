@@ -1,0 +1,84 @@
+ATPia/
+├── app/                          # Expo Router Pages (minimal)
+│   ├── (auth)/
+│   │   ├── login.tsx
+│   │   ├── register.tsx
+│   │   └── forgot-password.tsx
+│   ├── (main)/
+│   │   ├── dashboard.tsx
+│   │   ├── plans.tsx
+│   │   ├── tracker.tsx
+│   │   ├── food-scanner.tsx
+│   │   ├── forum.tsx
+│   │   ├── chatbot.tsx
+│   │   ├── profile.tsx
+│   │   ├── settings.tsx
+│   │   └── notifications.tsx
+│   ├── _layout.tsx
+│   └── index.tsx
+│
+├── features/                     # Feature-based organization
+│   ├── dashboard/
+│   │   ├── screens/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── types.ts
+│   ├── tracking/
+│   │   ├── screens/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── types.ts
+│   ├── nutrition/
+│   │   ├── screens/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── types.ts
+│   ├── social/
+│   │   ├── screens/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── types.ts
+│   ├── ai/
+│   │   ├── screens/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── types.ts
+│   ├── user/
+│   │   ├── screens/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── types.ts
+│   └── support/
+│       ├── screens/
+│       ├── components/
+│       ├── hooks/
+│       ├── services/
+│       └── types.ts
+│
+├── shared/                       # Shared across features
+│   ├── components/
+│   │   ├── ui/
+│   │   ├── navigation/
+│   │   ├── charts/
+│   │   └── forms/
+│   ├── hooks/
+│   ├── services/
+│   ├── stores/
+│   ├── utils/
+│   ├── types/
+│   └── constants/
+│
+├── locales/
+├── assets/
+├── app.json
+├── babel.config.js
+├── tailwind.config.js
+├── nativewind-env.d.ts
+├── package.json
+└── tsconfig.json

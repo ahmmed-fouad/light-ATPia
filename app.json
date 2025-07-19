@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "ATPia",
+    "slug": "ATPia",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/Logo_Image.png",
+    "scheme": "atpia",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "extra": {
+      "EXPO_PUBLIC_OPENROUTER_API_KEY": "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",
+      "router": {},
+      "eas": {
+        "projectId": "4518d24b-80ee-4623-97fa-d550e55d7d4f"
+      }
+    },
+    "splash": {
+      "image": "./assets/images/Logo_Image.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/ATPia_Logo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.hamzaandomar.ATPia"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/Logo_Image.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/Logo_Image.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
