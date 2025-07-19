@@ -7,8 +7,8 @@ import { useHomeData } from "@/features/home/hooks/useHomeData";
 import { useScrollToHide } from "@/hooks/useScrollToHide";
 import { Feather } from "@expo/vector-icons";
 import { Slot, usePathname, useRouter } from "expo-router";
-import { Bell, Menu } from "lucide-react-native";
-import { createContext, useContext } from "react";
+import { Bell, ChevronLeft, ChevronRight, Menu } from "lucide-react-native";
+import { createContext, useContext, useState } from "react";
 import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -36,6 +36,22 @@ const MainLayout = () => {
 
   // Use scroll hook
   const { handleScroll, topBarAnimation, isTopBarVisible } = useScrollToHide();
+
+  // Toggle state for icons
+  const [isIconsExpanded, setIsIconsExpanded] = useState(false);
+  const [iconsAnimation] = useState(new Animated.Value(0));
+
+  // Toggle icons function
+  const toggleIcons = () => {
+    const toValue = isIconsExpanded ? 0 : 1;
+    setIsIconsExpanded(!isIconsExpanded);
+    
+    Animated.timing(iconsAnimation, {
+      toValue,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  };
 
   // Simplified navigation mapping for Version 1 (including food scanner)
   const tabRoutes = {
@@ -118,17 +134,17 @@ const MainLayout = () => {
         </View>
 
         {/* Animated Top Bar - Absolute Positioned */}
-        <Animated.View 
+        <Animated.View
           style={[
             styles.topBar,
             {
               transform: [{ translateY: topBarAnimation }],
-              position: 'absolute',
+              position: "absolute",
               top: 0,
               left: 0,
               right: 0,
               zIndex: 1000,
-            }
+            },
           ]}
         >
           <View className="flex-row items-center space-x-3">
@@ -142,27 +158,69 @@ const MainLayout = () => {
               <Text className="text-gray-500 ml-2 text-xl font-bold">User</Text>
             </View>
           </View>
-          <View style={styles.topBarRight}>
-            <TouchableOpacity onPress={() => {}}>
-              <Feather name="calendar" size={24} color="#374151" />
+
+          {/* Animated Icons Container */}
+          <Animated.View
+            style={[
+              styles.topBarRight,
+              {
+                width: iconsAnimation.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [75, 200], // Collapsed vs expanded width
+                }),
+                overflow: "hidden",
+              },
+            ]}
+          >
+            {/* Toggle Button */}
+            <TouchableOpacity onPress={toggleIcons} style={styles.toggleButton}>
+              {isIconsExpanded ? (
+                <ChevronRight size={25} color="#374151" />
+              ) : (
+                <ChevronLeft size={25} color="#374151" />
+              )}
+              {/* ATPiaLogo */}
             </TouchableOpacity>
 
-            {/* bell */}
-            <TouchableOpacity>
-              <Bell size={25} color="#374151" />
-            </TouchableOpacity>
-            {/* menu */}
-            <TouchableOpacity>
-              <Menu size={25} color="#374151" />
-            </TouchableOpacity>
+            {/* Icons Container */}
+            {isIconsExpanded && (
+              <Animated.View
+                style={[
+                  styles.iconsContainer,
+                  {
+                    opacity: iconsAnimation,
+                    transform: [
+                      {
+                        translateX: iconsAnimation.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [-50, 0], // Slide from left
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              >
+                <TouchableOpacity onPress={() => {}}>
+                  <Feather name="calendar" size={24} color="#374151" />
+                </TouchableOpacity>
 
-            {/* ATPiaLogo */}
+                {/* bell */}
+                <TouchableOpacity>
+                  <Bell size={25} color="#374151" />
+                </TouchableOpacity>
+
+                {/* menu */}
+                <TouchableOpacity>
+                  <Menu size={25} color="#374151" />
+                </TouchableOpacity>
+              </Animated.View>
+            )}
             <Image
               source={images.ATPiaLogo}
-              style={{ width: 60, height: 60 }}
+              style={{ width: 60, height: 60, marginRight: 90 }}
               resizeMode="contain"
             />
-          </View>
+          </Animated.View>
         </Animated.View>
 
         {/* Chat Drawer */}
@@ -200,16 +258,29 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     height: 80, // Fixed height for consistent animation
+    marginTop: 60,
   },
   topBarRight: {
+    minWidth: 85,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#18b888",
+    borderRadius: 30,
+    paddingLeft: 4,
+    // paddingRight: 30,
+  },
+  toggleButton: {
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+  },
+  iconsContainer: {
     flexDirection: "row",
     gap: 20,
     alignItems: "center",
-    backgroundColor: "#18b888",
-    // paddingVertical: 10,
-    paddingLeft: 30,
-    // paddingRight: 10,
-    borderRadius: 30,
+    // paddingLeft: 20,
+    paddingRight: 5,
   },
 });
 

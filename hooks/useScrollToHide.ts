@@ -24,7 +24,7 @@ export const useScrollToHide = ({ onScroll }: UseScrollToHideProps = {}) => {
         // Hide top bar completely
         setIsTopBarVisible(false);
         Animated.timing(topBarAnimation, {
-          toValue: -80, // Hide completely (matches top bar height)
+          toValue: -130, // Hide completely (matches top bar height)
           duration: 300,
           useNativeDriver: true,
         }).start();
