@@ -1,27 +1,70 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import SectionHeader from '../components/SectionHeader';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MealCard from '../components/MealCard';
+import SectionHeader from '../components/SectionHeader';
 import { getMealsSections } from '../services/mealsService';
+import { Meal, MealsSection } from '../types/mealsTypes';
 
 const DaysMealsScreen = () => {
-  const sections = getMealsSections();
-  const activeCount = sections[0].data.length;
+  const router = useRouter();
+  const [meals, setMeals] = useState<Meal[]>([]);
+  const [sections, setSections] = useState<MealsSection[]>([]);
+
+  useEffect(() => {
+    // Initialize meals from service
+    const initialSections = getMealsSections();
+    const allMeals = [...initialSections[0].data, ...initialSections[1].data];
+    setMeals(allMeals);
+    updateSections(allMeals);
+  }, []);
+
+  const updateSections = (mealsList: Meal[]) => {
+    const activeMeals = mealsList.filter(meal => meal.isActive);
+    const inactiveMeals = mealsList.filter(meal => !meal.isActive);
+    
+    setSections([
+      { title: 'Active', data: activeMeals },
+      { title: 'Inactive', data: inactiveMeals },
+    ]);
+  };
+
+  const handleMealToggle = (mealId: string) => {
+    const updatedMeals = meals.map(meal => 
+      meal.id === mealId 
+        ? { ...meal, isActive: !meal.isActive }
+        : meal
+    );
+    setMeals(updatedMeals);
+    updateSections(updatedMeals);
+  };
+
+  const activeCount = sections[0]?.data.length || 0;
+
+  const handleBackPress = () => {
+    router.push('/(main)/(nutrition)/personal-program' as any);
+  };
 
   return (
     <ScrollView style={styles.root} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <View style={styles.headerRow}>
-        <TouchableOpacity style={styles.backBtn}>
-          <Feather name="chevron-left" size={28} color="#173430" />
+        <TouchableOpacity style={styles.backBtn} onPress={handleBackPress}>
+          <Feather name="chevron-left" size={28} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.title}>Day’s meals</Text>
+        <Text style={styles.title}>Day's meals</Text>
         <View style={styles.badge}><Text style={styles.badgeText}>{activeCount}</Text></View>
       </View>
       {sections.map(section => (
         <View key={section.title}>
           <SectionHeader title={section.title} />
           {section.data.map(meal => (
-            <MealCard key={meal.id} meal={meal} isActive={section.title === 'Active'} />
+            <MealCard 
+              key={meal.id} 
+              meal={meal} 
+              isActive={section.title === 'Active'} 
+              onToggle={() => handleMealToggle(meal.id)}
+            />
           ))}
         </View>
       ))}
@@ -33,45 +76,44 @@ const DaysMealsScreen = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
+    marginTop: 80,
   },
   content: {
     paddingHorizontal: 24,
-    paddingTop: 16,
+    paddingTop: 36,
     paddingBottom: 0,
   },
   headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 18,
     marginTop: 8,
   },
   backBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#F1F9E9',
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 18,
+    borderRadius: 35,
+    backgroundColor: "#18b888",
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#173430',
+    fontWeight: "700",
+    color: "#173430",
   },
   badge: {
-    minWidth: 44,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#18b888',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 16,
+    minWidth: 66,
+    height: 66,
+    borderRadius: 38,
+    backgroundColor: "#18b888",
+    alignItems: "center",
+    justifyContent: "center",
   },
   badgeText: {
-    color: '#fff',
-    fontWeight: '700',
+    color: "#fff",
+    fontWeight: "700",
     fontSize: 18,
   },
 });

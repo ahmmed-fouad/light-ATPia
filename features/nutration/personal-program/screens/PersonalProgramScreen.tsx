@@ -14,9 +14,6 @@ const PersonalProgramScreen = () => {
   return (
     <SafeAreaView style={styles.root}>
       <View style={styles.headerRow}>
-        <TouchableOpacity style={styles.closeBtn}>
-          <Feather name="x" size={28} color="#173430" />
-        </TouchableOpacity>
       </View>
       <ScrollView style={styles.content} contentContainerStyle={{ paddingBottom: 32 }}>
         <Text style={styles.title}>Your personal program{"\n"}is ready</Text>
@@ -28,7 +25,6 @@ const PersonalProgramScreen = () => {
         <Text style={styles.sectionTitle}>Nutritional Recommendations</Text>
         <RecommendationCard recommendations={recommendations} />
       </ScrollView>
-      <Text>Hello</Text>
       <ToggleFooter open={footerOpen} onToggle={() => setFooterOpen(o => !o)} activities={activities} />
     </SafeAreaView>
   );
@@ -38,14 +34,16 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingBottom: 100,
+    marginTop: 80,
+    // marginBottom: 100,
+
   },
   headerRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
     paddingHorizontal: 18,
-    paddingTop: 8,
+    paddingTop: 48,
     marginBottom: 8,
   },
   closeBtn: {

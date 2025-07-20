@@ -5,7 +5,7 @@ import { Animated, Dimensions, StyleSheet, Text, TouchableOpacity, View } from '
 import { Activity } from '../types/personalProgramTypes';
 import ActivityCard from './ActivityCard';
 
-const { height } = Dimensions.get('window');
+// const { height } = Dimensions.get('window');
 
 interface ToggleFooterProps {
   open: boolean;
@@ -36,10 +36,10 @@ const ToggleFooter: React.FC<ToggleFooterProps> = ({ open, onToggle, activities 
     outputRange: [0, 1],
   });
 
-  const footerHeight = anim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [120, 320],
-  });
+  // const footerHeight = anim.interpolate({
+  //   inputRange: [0, 1],
+  //   outputRange: [120, 320],
+  // });
 
   const handleActivityPress = (activity: Activity) => {
     switch (activity.label.toLowerCase()) {
@@ -67,7 +67,7 @@ const ToggleFooter: React.FC<ToggleFooterProps> = ({ open, onToggle, activities 
         styles.footer, 
         { 
           transform: [{ translateY }],
-          minHeight: footerHeight
+          // minHeight: footerHeight
         }
       ]}
       pointerEvents="box-none"
@@ -125,13 +125,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: -100,
+    bottom: -110,
+    marginBottom: 0,
     backgroundColor: '#13332B',
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    // paddingTop: 10,
-    paddingHorizontal: 24,
-    paddingBottom: 70,
+    borderRadius: 32,
+    paddingHorizontal: 14,
+    marginHorizontal: 37,
+    paddingBottom: 90,
     zIndex: 0,
   },
   handle: {
