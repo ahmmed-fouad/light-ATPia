@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import ActivityCard from './ActivityCard';
+import { useRouter } from 'expo-router';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Activity } from '../types/personalProgramTypes';
+import ActivityCard from './ActivityCard';
 
 const { height } = Dimensions.get('window');
 
@@ -13,6 +14,7 @@ interface ToggleFooterProps {
 }
 
 const ToggleFooter: React.FC<ToggleFooterProps> = ({ open, onToggle, activities }) => {
+  const router = useRouter();
   const anim = useRef(new Animated.Value(0)).current;
   
   useEffect(() => {
@@ -23,7 +25,7 @@ const ToggleFooter: React.FC<ToggleFooterProps> = ({ open, onToggle, activities 
     }).start();
   }, [open]);
 
-  const CLOSED_OFFSET = 670; // Only the handle remains visible (tweak as needed)
+  const CLOSED_OFFSET = 535; // Only the handle remains visible (tweak as needed)
   const translateY = anim.interpolate({
     inputRange: [0, 1],
     outputRange: [CLOSED_OFFSET, 0],
@@ -38,6 +40,26 @@ const ToggleFooter: React.FC<ToggleFooterProps> = ({ open, onToggle, activities 
     inputRange: [0, 1],
     outputRange: [120, 320],
   });
+
+  const handleActivityPress = (activity: Activity) => {
+    switch (activity.label.toLowerCase()) {
+      case 'track your food':
+        router.push('/(main)/(nutrition)/days-meals' as any);
+        break;
+      case 'balance your meals':
+        router.push('/(main)/(nutrition)/personal-program' as any);
+        break;
+      case 'drink more water':
+        router.push('/(main)/(tracking)/tracker' as any);
+        break;
+      case 'check your progress':
+        router.push('/(main)/(tracking)/profile' as any);
+        break;
+      default:
+        // Default navigation or no action
+        break;
+    }
+  };
 
   return (
     <Animated.View 
@@ -80,15 +102,20 @@ const ToggleFooter: React.FC<ToggleFooterProps> = ({ open, onToggle, activities 
         
         <View style={styles.grid}>
           {activities.map((a) => (
-            <ActivityCard key={a.label} label={a.label} icon={a.icon} />
+            <ActivityCard 
+              key={a.label} 
+              label={a.label} 
+              icon={a.icon} 
+              onPress={() => handleActivityPress(a)}
+            />
           ))}
         </View>
       </Animated.View>
       
-      <TouchableOpacity style={styles.button}>
+      {/* <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Explore home</Text>
         <Feather name="arrow-right" size={20} color="#fff" />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </Animated.View>
   );
 };
@@ -98,14 +125,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: 0,
+    bottom: -100,
     backgroundColor: '#13332B',
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
-    paddingTop: 10,
+    // paddingTop: 10,
     paddingHorizontal: 24,
     paddingBottom: 70,
-    zIndex: 10,
+    zIndex: 0,
   },
   handle: {
     alignItems: 'center',

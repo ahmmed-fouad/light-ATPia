@@ -1,35 +1,36 @@
+import { FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface ActivityCardProps {
   label: string;
   icon: string;
+  onPress?: () => void;
 }
 
-const ActivityCard: React.FC<ActivityCardProps> = ({ label, icon }) => {
+const ActivityCard: React.FC<ActivityCardProps> = ({ label, icon, onPress }) => {
   const getIcon = (iconName: string) => {
     switch (iconName) {
       case 'salad':
-        return <Feather name="coffee" size={34} color="#fff" />;
+        return <FontAwesome5 name="leaf" size={34} color="#fff" />;
       case 'balance':
-        return <Feather name="target" size={34} color="#fff" />;
+        return <FontAwesome5 name="balance-scale" size={34} color="#fff" />;
       case 'drink':
-        return <Feather name="droplet" size={34} color="#fff" />;
+        return <FontAwesome5 name="wine-glass-alt" size={34} color="#fff" />;
       case 'chart':
-        return <Feather name="bar-chart-2" size={34} color="#fff" />;
+        return <FontAwesome5 name="chart-line" size={34} color="#fff" />;
       default:
-        return <Feather name="activity" size={34} color="#fff" />;
+        return <FontAwesome5 name="dumbbell" size={34} color="#fff" />;
     }
   };
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
       <View style={styles.iconContainer}>
         {getIcon(icon)}
       </View>
       <Text style={styles.label}>{label}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -39,8 +40,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
-    // paddingVertical: 20,
-    // paddingHorizontal: 16,
     margin: 6,
     width: 140,
     height: 190,

@@ -8,19 +8,17 @@ const NutritionLayout = () => {
   const pathname = usePathname();
 
   const getActiveTab = () => {
-    if (pathname.includes("/diet-calculator")) return "diet-calculator";
-    if (pathname.includes("/meal-plans")) return "meal-plans";
-    if (pathname.includes("/recipes")) return "recipes";
-    if (pathname.includes("/grocery-list")) return "grocery-list";
-    return "diet-calculator"; // default
+    if (pathname.includes("/days-meals")) return "days-meals";
+    if (pathname.includes("/personal-program")) return "personal-program";
+    return "days-meals"; // default
   };
 
   const activeTab = getActiveTab();
 
   const handleTabPress = (
-    tabName: "diet-calculator" | "meal-plans" | "recipes" | "grocery-list"
+    tabName: "days-meals" | "personal-program"
   ) => {
-    router.push(`/(main)/(nutration)/${tabName}`);
+    router.push(`/(main)/(nutrition)/${tabName}`);
   };
 
   return (

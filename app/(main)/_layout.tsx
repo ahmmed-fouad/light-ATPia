@@ -125,7 +125,7 @@ const MainLayout = () => {
     home: "/(main)/home",
     ai: "/(main)/(ai)/chatbot",
     tracking: "/(main)/(tracking)/tracker",
-    nutrition: "/(main)/(nutrition)/diet-calculator",
+    nutrition: "/(main)/(nutrition)/personal-program",
   } as const;
 
   // Determine active tab based on current route
@@ -135,8 +135,8 @@ const MainLayout = () => {
       "/chatbot": "ai",
       "/tracker": "tracking",
       "/habits": "tracking",
-      "/diet-calculator": "nutrition",
-      "/meal-plans": "nutrition",
+      "/days-meals": "nutrition",
+      "/personal-program": "nutrition",
     };
 
     for (const [screen, tab] of Object.entries(screenToTab)) {
