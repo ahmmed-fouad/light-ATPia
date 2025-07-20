@@ -4,6 +4,10 @@ import { ChatDrawer } from "@/features/ai/chatbot/components/drawer/ChatDrawer";
 import { ChatService } from "@/features/ai/chatbot/services/chatService";
 import { useChatStore } from "@/features/ai/chatbot/stores/chatStore";
 import { useHomeData } from "@/features/home/hooks/useHomeData";
+import MenuDropdown from "@/features/menu/components/MenuDropdown";
+import { useMenuDropdown } from "@/features/menu/hooks";
+import { NotificationsDropdown } from "@/features/notifications/components/NotificationsDropdown";
+import { useNotificationsDropdown } from "@/features/notifications/hooks";
 import UserProfileDropdown from "@/features/user-profile/components/UserProfileDropdown";
 import { useScrollToHide } from "@/hooks/useScrollToHide";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -59,20 +63,20 @@ const MainLayout = () => {
   const handleProfileMenuItemPress = (menuItem: string) => {
     // Add navigation logic here
     switch (menuItem) {
-      case 'profile':
-        router.push('/(main)/profile' as any);
+      case "profile":
+        router.push("/(main)/profile" as any);
         break;
-      case 'settings':
-        router.push('/(main)/settings' as any);
+      case "settings":
+        router.push("/(main)/settings" as any);
         break;
-      case 'faq':
-        router.push('/(main)/faq' as any);
+      case "faq":
+        router.push("/(main)/faq" as any);
         break;
-      case 'pricing':
-        router.push('/(main)/pricing' as any);
+      case "pricing":
+        router.push("/(main)/pricing" as any);
         break;
-      case 'auth':
-        router.push('/(auth)/login' as any);
+      case "auth":
+        router.push("/(auth)/login" as any);
         break;
     }
   };
@@ -81,7 +85,7 @@ const MainLayout = () => {
   const toggleIcons = () => {
     const toValue = isIconsExpanded ? 0 : 1;
     setIsIconsExpanded(!isIconsExpanded);
-    
+
     // Animate icons container
     Animated.timing(iconsAnimation, {
       toValue,
@@ -108,7 +112,7 @@ const MainLayout = () => {
   const rotateLogo = () => {
     const newDirection = logoRotationDirection === 0 ? 1 : 0;
     setLogoRotationDirection(newDirection);
-    
+
     Animated.timing(logoIndependentRotation, {
       toValue: newDirection,
       duration: 500,
@@ -184,6 +188,20 @@ const MainLayout = () => {
 
   const { homeData, loading } = useHomeData();
 
+  // Notifications dropdown hook
+  const {
+    isDropdownVisible: isNotificationsDropdownVisible,
+    toggleDropdown: toggleNotificationsDropdown,
+    closeDropdown: closeNotificationsDropdown,
+  } = useNotificationsDropdown();
+
+  // Menu dropdown hook
+  const {
+    isDropdownVisible: isMenuDropdownVisible,
+    toggleDropdown: toggleMenuDropdown,
+    closeDropdown: closeMenuDropdown,
+  } = useMenuDropdown();
+
   return (
     <ScrollContext.Provider
       value={{ handleScroll, topBarAnimation, isTopBarVisible }}
@@ -210,7 +228,7 @@ const MainLayout = () => {
         >
           <View className="flex-row items-center space-x-3">
             {/* User Profile Section */}
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={toggleProfileDropdown}
               style={styles.userProfileContainer}
             >
@@ -220,11 +238,13 @@ const MainLayout = () => {
                   source={{ uri: homeData?.user.avatarUrl }}
                   resizeMode="contain"
                 />
-                <Text className="text-gray-500 ml-2 text-xl font-bold">User</Text>
-                <FontAwesome5 
-                  name="chevron-down" 
-                  size={16} 
-                  color="#374151" 
+                <Text className="text-gray-500 ml-2 text-xl font-bold">
+                  User
+                </Text>
+                <FontAwesome5
+                  name="chevron-down"
+                  size={16}
+                  color="#374151"
                   style={{ marginLeft: 8 }}
                 />
               </View>
@@ -246,10 +266,18 @@ const MainLayout = () => {
           >
             {/* Toggle Button */}
             <TouchableOpacity onPress={toggleIcons} style={styles.toggleButton}>
-              <Animated.View style={{ transform: [{ rotate: chevronRotation.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['0deg', '180deg'],
-              }) }] }}>
+              <Animated.View
+                style={{
+                  transform: [
+                    {
+                      rotate: chevronRotation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ["0deg", "180deg"],
+                      }),
+                    },
+                  ],
+                }}
+              >
                 {isIconsExpanded ? (
                   <ChevronRight size={25} color="#22C55E" />
                 ) : (
@@ -281,33 +309,42 @@ const MainLayout = () => {
                 </TouchableOpacity>
 
                 {/* bell */}
-                <TouchableOpacity>
+                <TouchableOpacity onPress={toggleNotificationsDropdown}>
                   <FontAwesome5 name="bell" size={25} color="#22C55E" />
                 </TouchableOpacity>
 
                 {/* menu */}
-                <TouchableOpacity>
+                <TouchableOpacity onPress={toggleMenuDropdown}>
                   <FontAwesome5 name="bars" size={25} color="#22C55E" />
                 </TouchableOpacity>
               </Animated.View>
             )}
-            <Animated.View style={{ 
-              transform: [
-                { rotate: logoChevronRotation.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ['0deg', '360deg'],
-                }) },
-                { rotate: logoIndependentRotation.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ['0deg', '180deg'],
-                }) }
-              ],
-              position: 'absolute',
-              right: 0,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <TouchableOpacity onPress={rotateLogo} style={styles.logoContainer}>
+            <Animated.View
+              style={{
+                transform: [
+                  {
+                    rotate: logoChevronRotation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ["0deg", "360deg"],
+                    }),
+                  },
+                  {
+                    rotate: logoIndependentRotation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ["0deg", "180deg"],
+                    }),
+                  },
+                ],
+                position: "absolute",
+                right: 0,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <TouchableOpacity
+                onPress={rotateLogo}
+                style={styles.logoContainer}
+              >
                 <Image
                   source={images.ATPiaLogo}
                   style={{ width: 60, height: 60 }}
@@ -334,6 +371,18 @@ const MainLayout = () => {
           isVisible={isProfileDropdownVisible}
           onClose={() => setIsProfileDropdownVisible(false)}
           onMenuItemPress={handleProfileMenuItemPress}
+        />
+
+        {/* Notifications Dropdown */}
+        <NotificationsDropdown
+          isVisible={isNotificationsDropdownVisible}
+          onClose={closeNotificationsDropdown}
+        />
+
+        {/* Menu Dropdown */}
+        <MenuDropdown
+          isVisible={isMenuDropdownVisible}
+          onClose={closeMenuDropdown}
         />
 
         {/* Simplified Bottom Bar */}

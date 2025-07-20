@@ -64,7 +64,7 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
               onClose();
             }}
           >
-            <FontAwesome5 name={item.icon} size={20} color="#607d79" />
+            <FontAwesome5 name={item.icon} size={22} color="#e1e8e1" />
             <Text style={styles.menuText}>{item.label}</Text>
           </TouchableOpacity>
         ))}
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   menuText: {
     marginLeft: 12,
     fontSize: 16,
-    color: "#607d79",
+    color: "#e1e8e1",
     fontWeight: "500",
   },
 });
