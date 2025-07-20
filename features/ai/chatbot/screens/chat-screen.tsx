@@ -201,9 +201,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
   };
 
   return (
-    <View 
-     style={styles.container}
-     >
+    <View style={styles.container}>
 
       {/* Messages */}
       <ScrollAwareFlatList

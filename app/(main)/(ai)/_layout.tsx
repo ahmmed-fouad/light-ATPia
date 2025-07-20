@@ -27,6 +27,7 @@ export default function AILayout() {
         alignItems: 'center',
         paddingHorizontal: 16,
         paddingVertical: 10,
+        marginTop: 105,
         borderBottomWidth: 1,
         borderBottomColor: '#E5E7EB',
         backgroundColor: '#FFFFFF',
