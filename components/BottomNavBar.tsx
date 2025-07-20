@@ -1,12 +1,12 @@
+import { FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const TABS = [
-  { key: 'home', icon: 'home' },
-  { key: 'water', icon: 'droplet' },
-  { key: 'chart', icon: 'pie-chart' },
-  { key: 'user', icon: 'user' },
+  { key: "home", icon: "home", label: "Home" },
+  { key: "ai", icon: "robot", label: "AI Chat" }, 
+  { key: "nutrition", icon: "apple-alt", label: "Nutrition" },
+  { key: "tracking", icon: "chart-line", label: "Tracking" },
 ];
 
 interface BottomNavBarProps {
@@ -20,10 +20,10 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeTab, onTabPress }) =>
       {TABS.map((tab) => (
         <TouchableOpacity
           key={tab.key}
-          style={[styles.tab, activeTab === tab.key && styles.activeTab]}
+          style={[styles.tab]}
           onPress={() => onTabPress(tab.key)}
         >
-          <Feather
+          <FontAwesome5
             name={tab.icon as any}
             size={26}
             color={activeTab === tab.key ? "#22C55E" : "#176801"}
@@ -39,11 +39,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#173430",
     borderRadius: 24,
-    // borderTopRightRadius: 24,
     paddingVertical: 16,
     paddingHorizontal: 16,
     marginHorizontal: 17,
-    // marginBottom: 25,
     justifyContent: "space-between",
     alignItems: "center",
   },
@@ -51,10 +49,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingVertical: 6,
-  },
-  activeTab: {
-    borderBottomWidth: 3,
-    borderBottomColor: "#22C55E",
   },
 });
 

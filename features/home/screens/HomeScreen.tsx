@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     paddingTop: 80, // Account for top bar height
   },
   scrollContent: {
-    paddingBottom: 24,
+    paddingBottom: 84,
   },
   loadingWrap: {
     flex: 1,

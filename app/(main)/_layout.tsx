@@ -4,10 +4,11 @@ import { ChatDrawer } from "@/features/ai/chatbot/components/drawer/ChatDrawer";
 import { ChatService } from "@/features/ai/chatbot/services/chatService";
 import { useChatStore } from "@/features/ai/chatbot/stores/chatStore";
 import { useHomeData } from "@/features/home/hooks/useHomeData";
+import UserProfileDropdown from "@/features/user-profile/components/UserProfileDropdown";
 import { useScrollToHide } from "@/hooks/useScrollToHide";
-import { Feather } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { Slot, usePathname, useRouter } from "expo-router";
-import { Bell, ChevronLeft, ChevronRight, Menu } from "lucide-react-native";
+import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import { createContext, useContext, useState } from "react";
 import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -40,45 +41,105 @@ const MainLayout = () => {
   // Toggle state for icons
   const [isIconsExpanded, setIsIconsExpanded] = useState(false);
   const [iconsAnimation] = useState(new Animated.Value(0));
+  const [chevronRotation] = useState(new Animated.Value(0));
+  const [logoRotation] = useState(new Animated.Value(0));
+  const [logoRotationDirection, setLogoRotationDirection] = useState(0);
+  const [logoChevronRotation] = useState(new Animated.Value(0));
+  const [logoIndependentRotation] = useState(new Animated.Value(0));
+
+  // User profile dropdown state
+  const [isProfileDropdownVisible, setIsProfileDropdownVisible] = useState(false);
+
+  // Handle profile dropdown toggle
+  const toggleProfileDropdown = () => {
+    setIsProfileDropdownVisible(!isProfileDropdownVisible);
+  };
+
+  // Handle profile menu item press
+  const handleProfileMenuItemPress = (menuItem: string) => {
+    // Add navigation logic here
+    switch (menuItem) {
+      case 'profile':
+        router.push('/(main)/profile' as any);
+        break;
+      case 'settings':
+        router.push('/(main)/settings' as any);
+        break;
+      case 'faq':
+        router.push('/(main)/faq' as any);
+        break;
+      case 'pricing':
+        router.push('/(main)/pricing' as any);
+        break;
+      case 'auth':
+        router.push('/(auth)/login' as any);
+        break;
+    }
+  };
 
   // Toggle icons function
   const toggleIcons = () => {
     const toValue = isIconsExpanded ? 0 : 1;
     setIsIconsExpanded(!isIconsExpanded);
     
+    // Animate icons container
     Animated.timing(iconsAnimation, {
       toValue,
-      duration: 300,
+      duration: 200,
       useNativeDriver: false,
+    }).start();
+
+    // Animate chevron rotation (360° clockwise)
+    Animated.timing(chevronRotation, {
+      toValue: isIconsExpanded ? 0 : 1,
+      duration: 100,
+      useNativeDriver: true,
+    }).start();
+
+    // Animate logo rotation (360° clockwise when chevron is pressed)
+    Animated.timing(logoChevronRotation, {
+      toValue: isIconsExpanded ? 0 : 1,
+      duration: 200,
+      useNativeDriver: true,
     }).start();
   };
 
-  // Simplified navigation mapping for Version 1 (including food scanner)
+  // Rotate logo function (independent logo rotation)
+  const rotateLogo = () => {
+    const newDirection = logoRotationDirection === 0 ? 1 : 0;
+    setLogoRotationDirection(newDirection);
+    
+    Animated.timing(logoIndependentRotation, {
+      toValue: newDirection,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  // Simplified navigation mapping for Version 1
   const tabRoutes = {
+    home: "/(main)/home",
     ai: "/(main)/(ai)/chatbot",
-    "food-scanner": "/(main)/(ai)/food-scanner/food-scanner",
     tracking: "/(main)/(tracking)/tracker",
     nutrition: "/(main)/(nutrition)/diet-calculator",
-    home: "/(main)/home",
   } as const;
 
   // Determine active tab based on current route
   const getActiveTab = () => {
     const screenToTab = {
-      "/ai": "ai",
-      "/food-scanner": "food-scanner",
+      "/home": "home",
+      "/chatbot": "ai",
       "/tracker": "tracking",
       "/habits": "tracking",
       "/diet-calculator": "nutrition",
       "/meal-plans": "nutrition",
-      "/home": "home",
     };
 
     for (const [screen, tab] of Object.entries(screenToTab)) {
       if (pathname.includes(screen)) return tab;
     }
 
-    return "ai"; // default
+    return "home"; // default to home
   };
 
   const activeTab = getActiveTab();
@@ -148,15 +209,26 @@ const MainLayout = () => {
           ]}
         >
           <View className="flex-row items-center space-x-3">
-            {/* avatarr */}
-            <View className="flex-row items-center">
-              <Image
-                style={{ width: 60, height: 60, borderRadius: 100 }}
-                source={{ uri: homeData?.user.avatarUrl }}
-                resizeMode="contain"
-              />
-              <Text className="text-gray-500 ml-2 text-xl font-bold">User</Text>
-            </View>
+            {/* User Profile Section */}
+            <TouchableOpacity 
+              onPress={toggleProfileDropdown}
+              style={styles.userProfileContainer}
+            >
+              <View className="flex-row items-center">
+                <Image
+                  style={{ width: 60, height: 60, borderRadius: 100 }}
+                  source={{ uri: homeData?.user.avatarUrl }}
+                  resizeMode="contain"
+                />
+                <Text className="text-gray-500 ml-2 text-xl font-bold">User</Text>
+                <FontAwesome5 
+                  name="chevron-down" 
+                  size={16} 
+                  color="#374151" 
+                  style={{ marginLeft: 8 }}
+                />
+              </View>
+            </TouchableOpacity>
           </View>
 
           {/* Animated Icons Container */}
@@ -174,12 +246,16 @@ const MainLayout = () => {
           >
             {/* Toggle Button */}
             <TouchableOpacity onPress={toggleIcons} style={styles.toggleButton}>
-              {isIconsExpanded ? (
-                <ChevronRight size={25} color="#374151" />
-              ) : (
-                <ChevronLeft size={25} color="#374151" />
-              )}
-              {/* ATPiaLogo */}
+              <Animated.View style={{ transform: [{ rotate: chevronRotation.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['0deg', '180deg'],
+              }) }] }}>
+                {isIconsExpanded ? (
+                  <ChevronRight size={25} color="#22C55E" />
+                ) : (
+                  <ChevronLeft size={25} color="#22C55E" />
+                )}
+              </Animated.View>
             </TouchableOpacity>
 
             {/* Icons Container */}
@@ -201,25 +277,44 @@ const MainLayout = () => {
                 ]}
               >
                 <TouchableOpacity onPress={() => {}}>
-                  <Feather name="calendar" size={24} color="#374151" />
+                  <FontAwesome5 name="calendar-alt" size={24} color="#22C55E" />
                 </TouchableOpacity>
 
                 {/* bell */}
                 <TouchableOpacity>
-                  <Bell size={25} color="#374151" />
+                  <FontAwesome5 name="bell" size={25} color="#22C55E" />
                 </TouchableOpacity>
 
                 {/* menu */}
                 <TouchableOpacity>
-                  <Menu size={25} color="#374151" />
+                  <FontAwesome5 name="bars" size={25} color="#22C55E" />
                 </TouchableOpacity>
               </Animated.View>
             )}
-            <Image
-              source={images.ATPiaLogo}
-              style={{ width: 60, height: 60, marginRight: 90 }}
-              resizeMode="contain"
-            />
+            <Animated.View style={{ 
+              transform: [
+                { rotate: logoChevronRotation.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ['0deg', '360deg'],
+                }) },
+                { rotate: logoIndependentRotation.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ['0deg', '180deg'],
+                }) }
+              ],
+              position: 'absolute',
+              right: 0,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <TouchableOpacity onPress={rotateLogo} style={styles.logoContainer}>
+                <Image
+                  source={images.ATPiaLogo}
+                  style={{ width: 60, height: 60 }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </Animated.View>
           </Animated.View>
         </Animated.View>
 
@@ -232,6 +327,13 @@ const MainLayout = () => {
           onSettingsPress={() => {}}
           onDeleteChat={handleDeleteChat}
           onDeleteAllChats={handleDeleteAllChats}
+        />
+
+        {/* User Profile Dropdown */}
+        <UserProfileDropdown
+          isVisible={isProfileDropdownVisible}
+          onClose={() => setIsProfileDropdownVisible(false)}
+          onMenuItemPress={handleProfileMenuItemPress}
         />
 
         {/* Simplified Bottom Bar */}
@@ -248,7 +350,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#f7f7f7",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -264,23 +366,31 @@ const styles = StyleSheet.create({
     minWidth: 85,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#18b888",
+    backgroundColor: "#173430",
     borderRadius: 30,
     paddingLeft: 4,
-    // paddingRight: 30,
+    position: 'relative',
   },
   toggleButton: {
     height: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-
+    alignItems: "center",
+    justifyContent: "center",
   },
   iconsContainer: {
     flexDirection: "row",
     gap: 20,
     alignItems: "center",
-    // paddingLeft: 20,
-    paddingRight: 5,
+    paddingLeft: 5,
+    paddingRight: 80, // Give space for the logo
+  },
+  logoContainer: {
+    width: 60,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  userProfileContainer: {
+    paddingHorizontal: 5,
   },
 });
 
