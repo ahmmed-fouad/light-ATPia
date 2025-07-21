@@ -6,9 +6,12 @@ import { FoodItem } from '../types/breakfastTypes';
 interface FoodItemCardProps {
   item: FoodItem;
   onRemove?: (itemId: string) => void;
+  onEdit?: () => void;
+  onDone?: () => void;
+  isDone?: boolean;
 }
 
-const FoodItemCard: React.FC<FoodItemCardProps> = ({ item, onRemove }) => {
+const FoodItemCard: React.FC<FoodItemCardProps> = ({ item, onRemove, onEdit, onDone, isDone }) => {
   const getFoodEmoji = (name: string) => {
     const lowerName = name.toLowerCase();
     if (lowerName.includes('chicken')) return '🍗';
@@ -23,7 +26,7 @@ const FoodItemCard: React.FC<FoodItemCardProps> = ({ item, onRemove }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isDone ? { opacity: 0.5 } : null]}>
       <View style={styles.leftSection}>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1, paddingBottom: 12}}>
           <Text style={styles.emoji}>{getFoodEmoji(item.name)}</Text>
@@ -65,10 +68,18 @@ const FoodItemCard: React.FC<FoodItemCardProps> = ({ item, onRemove }) => {
         )}
         <TouchableOpacity
           style={styles.editButton}
-          onPress={() => console.log("Edit food")}
+          onPress={onDone ? onDone : onEdit}
           activeOpacity={0.7}
         >
-          <Feather name="plus" size={25} color="#18b888" />
+          {onDone ? (
+            isDone ? (
+              <Feather name="corner-up-left" size={25} color="#18b888" />
+            ) : (
+              <Feather name="check" size={25} color="#18b888" />
+            )
+          ) : (
+            <Feather name="plus" size={25} color="#18b888" />
+          )}
         </TouchableOpacity>
       </View>
     </View>
