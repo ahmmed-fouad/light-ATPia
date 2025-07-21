@@ -1,10 +1,11 @@
 import  { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+// import { Feather } from '@expo/vector-icons';
 import ProgramChart from '../components/ProgramChart';
 import RecommendationCard from '../components/RecommendationCard';
 import ToggleFooter from '../components/ToggleFooter';
 import { getPersonalProgram } from '../services/personalProgramService';
+import { ScrollAwareView } from '@/components';
 
 const PersonalProgramScreen = () => {
   const [footerOpen, setFooterOpen] = useState(true);
@@ -13,19 +14,33 @@ const PersonalProgramScreen = () => {
 
   return (
     <SafeAreaView style={styles.root}>
-      <View style={styles.headerRow}>
-      </View>
-      <ScrollView style={styles.content} contentContainerStyle={{ paddingBottom: 32 }}>
-        <Text style={styles.title}>Your personal program{"\n"}is ready</Text>
-        <Text style={styles.subtitle}>To achieve your target weight we’ve tailored this plan for you</Text>
-        {/* <View style={styles.badgeWrap}>
+      <ScrollAwareView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        // style={styles.scrollView}
+      >
+        <View style={styles.headerRow}></View>
+        <ScrollView
+          style={styles.content}
+          contentContainerStyle={{ paddingBottom: 32 }}
+        >
+          <Text style={styles.title}>Your personal program{"\n"}is ready</Text>
+          <Text style={styles.subtitle}>
+            To achieve your target weight we’ve tailored this plan for you
+          </Text>
+          {/* <View style={styles.badgeWrap}>
           <View style={styles.badge}><Text style={styles.badgeText}>+{summary.totalChange} kg</Text></View>
         </View> */}
-        <ProgramChart data={chartData} color="#A3E635" />
-        <Text style={styles.sectionTitle}>Nutritional Recommendations</Text>
-        <RecommendationCard recommendations={recommendations} />
-      </ScrollView>
-      <ToggleFooter open={footerOpen} onToggle={() => setFooterOpen(o => !o)} activities={activities} />
+          <ProgramChart data={chartData} color="#A3E635" />
+          <Text style={styles.sectionTitle}>Nutritional Recommendations</Text>
+          <RecommendationCard recommendations={recommendations} />
+        </ScrollView>
+      </ScrollAwareView>
+        <ToggleFooter
+          open={footerOpen}
+          onToggle={() => setFooterOpen((o) => !o)}
+          activities={activities}
+        />
     </SafeAreaView>
   );
 };
@@ -34,9 +49,7 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: "#fff",
-    marginTop: 80,
-    // marginBottom: 100,
-
+    marginTop: 30,
   },
   headerRow: {
     flexDirection: "row",
@@ -63,7 +76,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#173430",
     textAlign: "center",
-    marginTop: 8,
+    marginTop: 20,
     marginBottom: 8,
   },
   subtitle: {
@@ -124,6 +137,12 @@ const styles = StyleSheet.create({
     color: "#12281D",
     marginTop: 18,
     marginBottom: 10,
+  },
+  scrollView: {
+    paddingTop: 80, // Account for top bar height
+  },
+  scrollContent: {
+    // paddingBottom: -94,
   },
 });
 

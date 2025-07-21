@@ -41,9 +41,8 @@ const BreakfastChart: React.FC<BreakfastChartProps> = ({ progress }) => {
   };
 
   const chartConfig = {
-    backgroundColor: "#fff",
-    backgroundGradientFrom: "#ebf6d6",
-    backgroundGradientTo: "#ebf6d6",
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientToOpacity: 0,
     decimalPlaces: 0,
     
     color: (opacity = 1) => `rgba(156, 208, 48, ${opacity})`,

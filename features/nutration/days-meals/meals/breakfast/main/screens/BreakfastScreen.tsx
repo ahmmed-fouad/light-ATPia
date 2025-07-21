@@ -9,6 +9,7 @@ import {
     SearchBar
 } from '../components';
 import { useBreakfastStore } from '../stores/breakfastStore';
+import { ScrollAwareView } from '@/components';
 
 const BreakfastScreen = () => {
   const { data, removeFoodItem } = useBreakfastStore();
@@ -24,11 +25,13 @@ const BreakfastScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+      <View style={styles.container}>
+        <ScrollAwareView
+        showsVerticalScrollIndicator={false}
+      >
       <ScrollView 
         style={styles.content}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
       >
       <BreakfastHeader />
       <SearchBar 
@@ -38,6 +41,7 @@ const BreakfastScreen = () => {
       
         <BreakfastChart progress={data.progress} />
         <DescriptionCard progress={data.progress} />
+        {/* TODO: Add breakfast log */}
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 24, paddingVertical: 16}}>
             <Text style={{fontSize: 22, fontWeight: '500', color: '#173430'}}>Breakfast Log</Text>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#18b888', borderRadius: 22, paddingHorizontal: 25, paddingVertical: 8}}>
@@ -54,7 +58,7 @@ const BreakfastScreen = () => {
           ))}
         </View>
       </ScrollView>
-      
+      </ScrollAwareView>
       <AddFoodButton onPress={handleAddFood} />
     </View>
   );
@@ -63,14 +67,12 @@ const BreakfastScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ebf6d6',
+    backgroundColor: '#fff',
   },
   content: {
     flex: 1,
   },
-  scrollContent: {
-    // marginBottom: 200, // Space for floating button
-  },
+
   foodList: {
     marginTop: 8,
   },

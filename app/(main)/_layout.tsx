@@ -136,6 +136,9 @@ const MainLayout = () => {
       "/tracker": "tracking",
       "/habits": "tracking",
       "/days-meals": "nutrition",
+      "/breakfast": "nutrition",
+      "/lunch": "nutrition",
+      "/diner": "nutrition",
       "/personal-program": "nutrition",
     };
 

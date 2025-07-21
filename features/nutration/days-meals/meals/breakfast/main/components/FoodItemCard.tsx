@@ -25,48 +25,50 @@ const FoodItemCard: React.FC<FoodItemCardProps> = ({ item, onRemove }) => {
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
-        <Text style={styles.emoji}>{getFoodEmoji(item.name)}</Text>
-        <View style={styles.info}>
-          <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.serving}>1 serving</Text>
+        <View style={{flexDirection: 'row', alignItems: 'center', flex: 1, paddingBottom: 12}}>
+          <Text style={styles.emoji}>{getFoodEmoji(item.name)}</Text>
+          <View style={styles.info}>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.serving}>1 serving</Text>
+          </View>
+        </View>
+
+        <View style={styles.macrosSection}>
+          <View style={styles.macroItem}>
+            <View style={[styles.dot, { backgroundColor: "#18b888" }]} />
+            <Text style={styles.macroText}>{item.kcal} kcal</Text>
+          </View>
+          <View style={styles.macroItem}>
+            <View style={[styles.dot, { backgroundColor: "#ef4444" }]} />
+            <Text style={styles.macroText}>{item.carbs} g</Text>
+          </View>
+          <View style={styles.macroItem}>
+            <View style={[styles.dot, { backgroundColor: "#f59e0b" }]} />
+            <Text style={styles.macroText}>{item.fat} g</Text>
+          </View>
+          <View style={styles.macroItem}>
+            <View style={[styles.dot, { backgroundColor: "#8b5cf6" }]} />
+            <Text style={styles.macroText}>{item.protein} g</Text>
+          </View>
         </View>
       </View>
-      
-      <View style={styles.macrosSection}>
-        <View style={styles.macroItem}>
-          <View style={[styles.dot, { backgroundColor: '#18b888' }]} />
-          <Text style={styles.macroText}>{item.kcal} kcal</Text>
-        </View>
-        <View style={styles.macroItem}>
-          <View style={[styles.dot, { backgroundColor: '#ef4444' }]} />
-          <Text style={styles.macroText}>{item.carbs} g</Text>
-        </View>
-        <View style={styles.macroItem}>
-          <View style={[styles.dot, { backgroundColor: '#f59e0b' }]} />
-          <Text style={styles.macroText}>{item.fat} g</Text>
-        </View>
-        <View style={styles.macroItem}>
-          <View style={[styles.dot, { backgroundColor: '#8b5cf6' }]} />
-          <Text style={styles.macroText}>{item.protein} g</Text>
-        </View>
-      </View>
-      
+
       <View style={styles.rightSection}>
         {onRemove && (
-          <TouchableOpacity 
-            style={styles.removeButton} 
+          <TouchableOpacity
+            style={styles.removeButton}
             onPress={() => onRemove(item.id)}
             activeOpacity={0.7}
           >
-            <Feather name="x" size={16} color="#ef4444" />
+            <Feather name="x" size={25} color="#ef4444" />
           </TouchableOpacity>
         )}
-        <TouchableOpacity 
-          style={styles.editButton} 
-          onPress={() => console.log('Edit food')}
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => console.log("Edit food")}
           activeOpacity={0.7}
         >
-          <Feather name="edit-3" size={16} color="#18b888" />
+          <Feather name="edit-3" size={25} color="#18b888" />
         </TouchableOpacity>
       </View>
     </View>
@@ -75,82 +77,90 @@ const FoodItemCard: React.FC<FoodItemCardProps> = ({ item, onRemove }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 16,
+    flexDirection: "row",
+    justifyContent: "space-between",
+
+    alignItems: "center",
+    backgroundColor: "#f7f7f7",
+    borderRadius: 26,
+    // padding: 16,
+    paddingHorizontal: 28,
+    paddingVertical: 24,
     marginHorizontal: 24,
-    marginBottom: 12,
-    shadowColor: '#000',
+    marginBottom: 22,
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
     elevation: 2,
   },
   leftSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
+      //  paddingBottom: 12,
+
   },
   emoji: {
-    fontSize: 32,
+    fontSize: 37,
     marginRight: 12,
   },
   info: {
     flex: 1,
   },
   name: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#173430',
+    fontSize: 18,
+    width: 200,
+    // borderWidth: 1,
+    fontWeight: "600",
+    color: "#173430",
     marginBottom: 2,
   },
   serving: {
-    fontSize: 14,
-    color: '#6b7280',
-    fontWeight: '400',
+    fontSize: 16,
+    color: "#6b7280",
+    fontWeight: "400",
   },
   macrosSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
-    marginRight: 16,
+    // marginRight: 19,
   },
   macroItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
   macroText: {
-    fontSize: 12,
-    color: '#6b7280',
-    fontWeight: '500',
+    fontSize: 16,
+    color: "#6b7280",
+    fontWeight: "500",
   },
   rightSection: {
+    // alignItems: "center",
+    // borderWidth: 1,
+    justifyContent: 'space-between',
     alignItems: 'center',
+    height: 80,
     gap: 8,
   },
   removeButton: {
-    width: 24,
-    height: 24,
+
     borderRadius: 12,
-    backgroundColor: '#fef2f2',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fef2f2",
+    alignItems: "center",
+    justifyContent: "center",
   },
   editButton: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#f0fdf4',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#f0fdf4",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

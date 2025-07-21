@@ -6,6 +6,8 @@ export default function Layout() {
       <Stack.Screen name="days-meals" options={{ headerShown: false }} />
       <Stack.Screen name="personal-program" options={{ headerShown: false }} />
       <Stack.Screen name="breakfast" options={{ headerShown: false }} />
+      <Stack.Screen name="lunch" options={{ headerShown: false }} />
+      <Stack.Screen name="diner" options={{ headerShown: false }} />
     </Stack>
   );
 }

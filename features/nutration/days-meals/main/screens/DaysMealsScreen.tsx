@@ -6,6 +6,8 @@ import MealCard from '../components/MealCard';
 import SectionHeader from '../components/SectionHeader';
 import { getMealsSections } from '../services/mealsService';
 import { Meal, MealsSection } from '../types/mealsTypes';
+import { ScrollAwareView } from '@/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DaysMealsScreen = () => {
   const router = useRouter();
@@ -47,7 +49,10 @@ const DaysMealsScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.root} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+    <View style={styles.root}>
+      <ScrollAwareView
+        showsVerticalScrollIndicator={false}
+      >
       <View style={styles.headerRow}>
         <TouchableOpacity style={styles.backBtn} onPress={handleBackPress}>
           <Feather name="chevron-left" size={28} color="#fff" />
@@ -69,7 +74,8 @@ const DaysMealsScreen = () => {
         </View>
       ))}
       <View style={{ height: 32 }} />
-    </ScrollView>
+    </ScrollAwareView>
+    </View>
   );
 };
 
@@ -77,7 +83,7 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: "#fff",
-    marginTop: 80,
+    paddingHorizontal: 18,
   },
   content: {
     paddingHorizontal: 24,
@@ -89,7 +95,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 18,
-    marginTop: 8,
+    marginTop: 120,
   },
   backBtn: {
     padding: 18,
