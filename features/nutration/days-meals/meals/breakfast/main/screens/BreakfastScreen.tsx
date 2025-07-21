@@ -1,15 +1,15 @@
+import { ScrollAwareView } from '@/components';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View, Text } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import {
-    AddFoodButton,
-    BreakfastChart,
-    BreakfastHeader,
-    DescriptionCard,
-    FoodItemCard,
-    SearchBar
+  AddFoodButton,
+  BreakfastChart,
+  BreakfastHeader,
+  DescriptionCard,
+  FoodItemCard,
+  SearchBar
 } from '../components';
 import { useBreakfastStore } from '../stores/breakfastStore';
-import { ScrollAwareView } from '@/components';
 
 const BreakfastScreen = () => {
   const { data, removeFoodItem } = useBreakfastStore();
@@ -41,11 +41,11 @@ const BreakfastScreen = () => {
       
         <BreakfastChart progress={data.progress} />
         <DescriptionCard progress={data.progress} />
-        {/* TODO: Add breakfast log */}
+        {/* Header Section */}
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 24, paddingVertical: 16}}>
             <Text style={{fontSize: 22, fontWeight: '500', color: '#173430'}}>Breakfast Log</Text>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#18b888', borderRadius: 22, paddingHorizontal: 25, paddingVertical: 8}}>
-                <Text style={{color: '#fff', fontSize: 18, fontWeight: '700'}}>3</Text>
+                <Text style={{color: '#fff', fontSize: 18, fontWeight: '700'}}>{data.foodItems.length}</Text>
             </View>
         </View>
         <View style={styles.foodList}>

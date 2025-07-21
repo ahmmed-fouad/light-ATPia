@@ -68,7 +68,7 @@ const FoodItemCard: React.FC<FoodItemCardProps> = ({ item, onRemove }) => {
           onPress={() => console.log("Edit food")}
           activeOpacity={0.7}
         >
-          <Feather name="edit-3" size={25} color="#18b888" />
+          <Feather name="plus" size={25} color="#18b888" />
         </TouchableOpacity>
       </View>
     </View>
