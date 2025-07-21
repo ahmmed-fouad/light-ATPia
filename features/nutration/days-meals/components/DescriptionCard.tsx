@@ -1,4 +1,3 @@
-import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { BreakfastProgress } from '../types/breakfastTypes';
@@ -9,34 +8,41 @@ interface DescriptionCardProps {
 
 const DescriptionCard: React.FC<DescriptionCardProps> = ({ progress }) => {
   const renderMacroItem = (
-    icon: string,
-    color: string,
     label: string,
     current: number,
     target: number,
-    unit: string
+    unit: string,
+    color: string,
+    color2: string,
+    percentage: number
   ) => {
-    const percentage = Math.min((current / target) * 100, 100);
-    
     return (
       <View style={styles.macroItem}>
-        <View style={[styles.iconContainer, { backgroundColor: color }]}>
-          <Feather name={icon as any} size={16} color="#fff" />
+        <View style={styles.macroHeader}>
+          <Text style={styles.macroValue}>{current}</Text>
+          <Text style={styles.macroUnit}>{unit}</Text>
         </View>
-        <View style={styles.macroInfo}>
+        <View style={styles.macroLabelContainer}>
           <Text style={styles.macroLabel}>{label}</Text>
-          <Text style={styles.macroValue}>
-            {current}{unit} / {target}{unit}
-          </Text>
-          <View style={styles.progressBar}>
-            <View 
+          <Text style={styles.macroLabel}>{percentage}%</Text>
+        </View>
+        <View style={styles.macroFooter}>
+          <View
+            style={[
+              styles.progressBar,
+              {
+                backgroundColor: color2,
+              },
+            ]}
+          >
+            <View
               style={[
-                styles.progressFill, 
-                { 
-                  backgroundColor: color, 
-                  width: `${percentage}%` 
-                }
-              ]} 
+                styles.progressFill,
+                {
+                  backgroundColor: color,
+                  width: `${Math.min(percentage, 100)}%`,
+                },
+              ]}
             />
           </View>
         </View>
@@ -44,45 +50,49 @@ const DescriptionCard: React.FC<DescriptionCardProps> = ({ progress }) => {
     );
   };
 
+  const caloriesPercentage = Math.min((progress.currentKcal / progress.targetKcal) * 100, 100);
+  const carbsPercentage = Math.min((progress.currentCarbs / progress.targetCarbs) * 100, 100);
+  const proteinPercentage = Math.min((progress.currentProtein / progress.targetProtein) * 100, 100);
+  const fatPercentage = Math.min((progress.currentFat / progress.targetFat) * 100, 100);
+
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Today's Summary</Text>
-        <Text style={styles.subtitle}>Your nutrition breakdown</Text>
-      </View>
-      
-      <View style={styles.content}>
+      <View style={styles.grid}>
         {renderMacroItem(
-          'zap',
-          '#18b888',
-          'Calories',
+          "Calory gained",
           progress.currentKcal,
           progress.targetKcal,
-          ' kcal'
+          " kcal",
+          "#18b888",
+          "#e3f1d0",
+          Math.round(caloriesPercentage)
         )}
         {renderMacroItem(
-          'leaf',
-          '#10b981',
-          'Carbohydrates',
+          "Carbs",
           progress.currentCarbs,
           progress.targetCarbs,
-          'g'
+          "g",
+          "#ef4444",
+          "#f9d1d9",
+          Math.round(carbsPercentage)
         )}
         {renderMacroItem(
-          'droplet',
-          '#3b82f6',
-          'Protein',
-          progress.currentProtein,
-          progress.targetProtein,
-          'g'
-        )}
-        {renderMacroItem(
-          'zap',
-          '#f59e0b',
-          'Fat',
+          "Fat",
           progress.currentFat,
           progress.targetFat,
-          'g'
+          "g",
+          "#f59e0b",
+          "#f9e2d2",
+          Math.round(fatPercentage)
+        )}
+        {renderMacroItem(
+          "Protein",
+          progress.currentProtein,
+          progress.targetProtein,
+          "g",
+          "#8b5cf6",
+          "#e0d1fa",
+          Math.round(proteinPercentage)
         )}
       </View>
     </View>
@@ -91,70 +101,69 @@ const DescriptionCard: React.FC<DescriptionCardProps> = ({ progress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: "#f7f7f7",
     borderRadius: 20,
-    padding: 20,
+    padding: 30,
     marginHorizontal: 24,
-    marginBottom: 24,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
+    marginBottom: 30,
   },
-  header: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#173430',
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#6b7280',
-    fontWeight: '500',
-  },
-  content: {
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 16,
   },
   macroItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    width: "47%",
+    borderRadius: 12,
   },
-  iconContainer: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  macroInfo: {
-    flex: 1,
-  },
-  macroLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#173430',
-    marginBottom: 2,
+  macroHeader: {
+    marginBottom: 5,
+    flexDirection: "row",
+    alignItems: "flex-end",
   },
   macroValue: {
-    fontSize: 12,
-    color: '#6b7280',
-    fontWeight: '500',
-    marginBottom: 4,
+    fontSize: 24,
+    marginLeft: 8,
+    marginRight: 4,
+
+    fontWeight: "700",
+    color: "#173430",
+  },
+  macroUnit: {
+    fontSize: 16,
+    color: "#6b7280",
+    fontWeight: "500",
+  },
+  macroLabelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    fontWeight: "500",
+    marginLeft: 4,
+    marginBottom: 16,
+  },
+  macroLabel: {
+    fontSize: 16,
+    color: "#6b7280",
+    fontWeight: "800",
+    marginLeft: 4,
+    // marginBottom: 12,
+  },
+  macroFooter: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   progressBar: {
-    height: 4,
-    backgroundColor: '#f3f4f6',
+    flex: 1,
+    height: 3,
+    backgroundColor: "#e5e7eb",
     borderRadius: 2,
-    overflow: 'hidden',
+    marginLeft: 8,
+    overflow: "hidden",
   },
   progressFill: {
-    height: '100%',
+    height: "100%",
     borderRadius: 2,
   },
 });

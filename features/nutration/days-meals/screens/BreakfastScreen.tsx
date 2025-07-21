@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import {
     AddFoodButton,
     BreakfastChart,
     BreakfastHeader,
-    BreakfastSectionHeader,
     DescriptionCard,
     FoodItemCard,
     SearchBar
@@ -39,8 +38,12 @@ const BreakfastScreen = () => {
       
         <BreakfastChart progress={data.progress} />
         <DescriptionCard progress={data.progress} />
-        <BreakfastSectionHeader count={data.foodItems.length} />
-        
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 24, paddingVertical: 16}}>
+            <Text style={{fontSize: 22, fontWeight: '500', color: '#173430'}}>Breakfast Log</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#18b888', borderRadius: 22, paddingHorizontal: 25, paddingVertical: 8}}>
+                <Text style={{color: '#fff', fontSize: 18, fontWeight: '700'}}>3</Text>
+            </View>
+        </View>
         <View style={styles.foodList}>
           {data.foodItems.map(item => (
             <FoodItemCard 
