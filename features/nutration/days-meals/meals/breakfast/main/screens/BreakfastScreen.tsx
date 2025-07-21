@@ -72,6 +72,24 @@ const BreakfastScreen = () => {
     return () => clearTimeout(timer);
   }, [chosenItems]);
 
+  // Load doneIds on mount
+  useEffect(() => {
+    const loadDoneIds = async () => {
+      try {
+        const storedDoneIds = await AsyncStorage.getItem('doneIds');
+        setDoneIds(storedDoneIds ? JSON.parse(storedDoneIds) : []);
+      } catch {
+        setDoneIds([]);
+      }
+    };
+    loadDoneIds();
+  }, []);
+
+  // Save doneIds to storage whenever it changes
+  useEffect(() => {
+    AsyncStorage.setItem('doneIds', JSON.stringify(doneIds));
+  }, [doneIds]);
+
   const handleAddFood = () => {
     // TODO: Implement add food functionality
     console.log('Add food pressed');
