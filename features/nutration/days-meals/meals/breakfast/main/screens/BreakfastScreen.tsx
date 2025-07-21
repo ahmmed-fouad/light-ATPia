@@ -108,6 +108,19 @@ const BreakfastScreen = () => {
     : data.foodItems;
   const isSearching = searchQuery.length > 0;
 
+  // Calculate progress from done chosen items
+  const doneChosenItems = chosenItems.filter(item => doneIds.includes(item.id));
+  const doneProgress = {
+    currentKcal: doneChosenItems.reduce((sum, item) => sum + (item.kcal || 0), 0),
+    targetKcal: data.progress.targetKcal,
+    currentCarbs: doneChosenItems.reduce((sum, item) => sum + (item.carbs || 0), 0),
+    targetCarbs: data.progress.targetCarbs,
+    currentFat: doneChosenItems.reduce((sum, item) => sum + (item.fat || 0), 0),
+    targetFat: data.progress.targetFat,
+    currentProtein: doneChosenItems.reduce((sum, item) => sum + (item.protein || 0), 0),
+    targetProtein: data.progress.targetProtein,
+  };
+
   return (
       <View style={styles.container}>
         <ScrollAwareView
@@ -125,8 +138,8 @@ const BreakfastScreen = () => {
       {/* Only show chart and description if not searching */}
       {!isSearching && (
         <>
-          <BreakfastChart progress={data.progress} />
-          <DescriptionCard progress={data.progress} />
+          <BreakfastChart progress={doneProgress} />
+          <DescriptionCard progress={doneProgress} />
         </>
       )}
       {/* Chosen Breakfast Section */}
