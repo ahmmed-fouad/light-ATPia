@@ -1,3 +1,3 @@
-import BreakfastScreen from '@/features/nutration/days-meals/screens/BreakfastScreen';
+import BreakfastScreen from '@/features/nutration/days-meals/meals/breakfast/main/screens/BreakfastScreen';
 
 export default BreakfastScreen;
