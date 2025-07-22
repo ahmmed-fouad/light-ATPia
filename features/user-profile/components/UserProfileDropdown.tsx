@@ -24,7 +24,7 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
   }, [isVisible]);
 
   const menuItems = [
-    { id: 'profile', label: 'Profile', icon: 'user' },
+    // { id: 'profile', label: 'Profile', icon: 'user' },
     { id: 'settings', label: 'Settings', icon: 'cog' },
     { id: 'faq', label: 'FAQ', icon: 'question-circle' },
     { id: 'pricing', label: 'Plan & Pricing', icon: 'credit-card' },

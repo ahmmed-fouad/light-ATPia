@@ -19,7 +19,7 @@ const FAQChart: React.FC = () => {
       <Text style={styles.header}>Most Asked Topics</Text>
       <PieChart
         data={data}
-        width={screenWidth - 32}
+        width={600}
         height={180}
         chartConfig={chartConfig}
         accessor={'population'}
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#6366f1',
+    color: '#64748b',
     marginBottom: 12,
     textAlign: 'center',
   },

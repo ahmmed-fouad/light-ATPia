@@ -82,17 +82,14 @@ const MainLayout = () => {
   const handleProfileMenuItemPress = (menuItem: string) => {
     // Add navigation logic here
     switch (menuItem) {
-      case "profile":
-        router.push("/(main)/profile" as any);
-        break;
       case "settings":
-        router.push("/(main)/settings" as any);
+        router.push("/(main)/(avatar)/settings" as any);
         break;
       case "faq":
-        router.push("/(main)/faq" as any);
+        router.push("/(main)/(avatar)/faq" as any);
         break;
       case "pricing":
-        router.push("/(main)/pricing" as any);
+        router.push("/(main)/(avatar)/pricing" as any);
         break;
       case "auth":
         router.push("/(auth)/login" as any);

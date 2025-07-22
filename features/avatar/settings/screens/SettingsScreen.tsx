@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, SafeAreaView } from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
 import ProfileCard from '../components/ProfileCard';
 import PreferencesCard from '../components/PreferencesCard';
 import UsageChart from '../components/UsageChart';
@@ -8,6 +8,7 @@ import SecurityPrivacyCard from '../components/SecurityPrivacyCard';
 import FeedbackCard from '../components/FeedbackCard';
 import AppInfoCard from '../components/AppInfoCard';
 import { ScrollAwareView } from '@/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SettingsScreen = () => {
   return (

@@ -39,7 +39,7 @@ const FAQContactForm: React.FC = () => {
               multiline
               numberOfLines={4}
               textAlignVertical="top"
-              required={field.required}
+              // required={field.required}
             />
           ) : (
             <TextInput
@@ -50,7 +50,7 @@ const FAQContactForm: React.FC = () => {
               onChangeText={(text) => handleChange(field.name, text)}
               keyboardType={field.type === 'email' ? 'email-address' : 'default'}
               autoCapitalize={field.name === 'email' ? 'none' : 'sentences'}
-              required={field.required}
+              // required={field.required}
             />
           )
         )}
@@ -71,76 +71,76 @@ const FAQContactForm: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 16,
     padding: 16,
     marginBottom: 24,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.06,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 2,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: "#e5e7eb",
   },
   header: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#6366f1',
+    fontWeight: "bold",
+    color: "#0a8f7c",
     marginBottom: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
   subtitle: {
     fontSize: 14,
-    color: '#64748b',
+    color: "#64748b",
     marginBottom: 12,
-    textAlign: 'center',
+    textAlign: "center",
   },
   form: {
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: "#f8fafc",
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: "#e5e7eb",
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 15,
-    color: '#334155',
+    color: "#334155",
     marginBottom: 10,
   },
   textarea: {
     minHeight: 80,
   },
   button: {
-    backgroundColor: '#6366f1',
+    backgroundColor: "#0a8f7c",
     borderRadius: 8,
     paddingVertical: 12,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 4,
     marginBottom: 4,
   },
   buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 16,
   },
   success: {
-    color: '#22c55e',
-    textAlign: 'center',
+    color: "#22c55e",
+    textAlign: "center",
     marginTop: 6,
     fontSize: 15,
   },
   supportHours: {
-    color: '#94a3b8',
+    color: "#94a3b8",
     fontSize: 13,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 10,
   },
   email: {
-    color: '#6366f1',
-    textDecorationLine: 'underline',
+    color: "#0a8f7c",
+    textDecorationLine: "underline",
   },
 });
 
