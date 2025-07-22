@@ -1,23 +1,21 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import Header from '../components/Header';
 import PlansGrid from '../components/PlansGrid';
-import PlansRadarChart from '../components/PlansRadarChart';
-import PlansFAQ from '../components/PlansFAQ';
-import { ScrollAwareView } from '@/components';
+import SelectPlanButton from '../components/SelectPlanButton';
 
 const PricingScreen: React.FC = () => {
+  const handleSelectPlan = () => {
+    // TODO: Implement plan selection logic or navigation
+  };
+
   return (
     <SafeAreaView style={styles.root}>
-      <ScrollAwareView
-        showsVerticalScrollIndicator={false}
-      >
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <Text style={styles.pageHeader}>Plans & Pricing</Text>
-      <PlansGrid />
-      <PlansRadarChart />
-      <PlansFAQ />
-    </ScrollView>
-    </ScrollAwareView>
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+        <Header />
+        <PlansGrid />
+        <SelectPlanButton onPress={handleSelectPlan} />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -25,14 +23,14 @@ const PricingScreen: React.FC = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    backgroundColor: '#fff',
   },
-  pageHeader: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#334155',
-    marginBottom: 18,
-    textAlign: 'center',
-    marginTop: 8,
+  container: {
+    paddingHorizontal: 18,
+    paddingTop: 8,
+    paddingBottom: 24,
+    flexGrow: 1,
+    justifyContent: 'flex-start',
   },
 });
 

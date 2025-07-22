@@ -26,7 +26,7 @@ const FAQScreen: React.FC = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    paddingTop: 70,
+    paddingTop: -36,
   },
   container: {
     padding: 16,
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     color: "#25443f",
     // stroke: "#18b888",
     marginBottom: 18,
+    paddingTop: 110,
     textAlign: "center",
     marginTop: 8,
   },

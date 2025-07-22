@@ -17,7 +17,7 @@ const SettingsScreen = () => {
       <ScrollAwareView
         showsVerticalScrollIndicator={false}
       >
-    <ScrollView style={styles.bg} contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView  showsVerticalScrollIndicator={false}>
       <ProfileCard />
       <PreferencesCard />
       <UsageChart />
@@ -34,12 +34,12 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    // backgroundColor: 'red',
+    paddingTop: -40,
   },
-  bg: { flex: 1, backgroundColor: '#f3f4f6' },
+  // bg: { flex: 1, backgroundColor: '#f3f4f6' },
   container: {
-    // padding: 16,
     paddingHorizontal: 16,
-    paddingTop: 110,
     gap: 18,
     paddingBottom: 22,
   },

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform, Alert, Image } from 'react-native';
-import { useSettingsStore } from '../stores/settingsStore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import { Pencil } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useSettingsStore } from '../stores/settingsStore';
 
 const ProfileCard = () => {
   const profile = useSettingsStore(s => s.profile);
@@ -12,6 +13,23 @@ const ProfileCard = () => {
   const [editing, setEditing] = useState(false);
   const [localProfile, setLocalProfile] = useState(profile);
   const [loading, setLoading] = useState(false);
+
+  // Load the image URI from AsyncStorage on mount
+  useEffect(() => {
+    const loadPhoto = async () => {
+      try {
+        const savedPhoto = await AsyncStorage.getItem('profilePhoto');
+        if (savedPhoto) {
+          setPhoto(savedPhoto); // update global store
+          setLocalProfile(p => ({ ...p, photo: savedPhoto }));
+        }
+      } catch (e) {
+        // Optionally handle error
+      }
+    };
+    loadPhoto();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Handle avatar/photo change
   const pickImage = async () => {
@@ -26,6 +44,7 @@ const ProfileCard = () => {
       if (!result.canceled && result.assets && result.assets[0].uri) {
         setPhoto(result.assets[0].uri);
         setLocalProfile(p => ({ ...p, photo: result.assets[0].uri }));
+        await AsyncStorage.setItem('profilePhoto', result.assets[0].uri);
       }
     } catch (e) {
       Alert.alert('Error', 'Could not pick image.');
@@ -64,7 +83,7 @@ const ProfileCard = () => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={{ width: '100%' }}
+      style={{ width: '100%'}}
     >
       <View style={styles.card}>
         <View style={styles.avatarRow}>
@@ -74,7 +93,7 @@ const ProfileCard = () => {
             </View>
           ) : (
             <TouchableOpacity onPress={pickImage} style={styles.avatarBtn} disabled={loading}>
-              {profile.photo ? (
+              {localProfile.photo ? (
                 <Image source={{ uri: localProfile.photo }} style={styles.avatarImg} />
               ) : (
                 <View style={styles.avatarPlaceholder} />
@@ -128,6 +147,7 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     marginBottom: 8,
+    marginTop: 90,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
@@ -135,7 +155,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     width: "100%",
   },
-  avatarRow: { alignItems: "center", marginBottom: 12 },
+  avatarRow: { alignItems: "center", marginBottom: 2 },
   avatarBtn: { position: "relative" },
   avatarPlaceholder: {
     width: 80,
