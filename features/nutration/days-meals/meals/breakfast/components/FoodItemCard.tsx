@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f7f7f7",
     borderRadius: 26,
     // padding: 16,
-    paddingHorizontal: 28,
+    paddingHorizontal: 8,
     paddingVertical: 24,
     // marginBottom: 22,
     shadowColor: "#000",
@@ -118,9 +118,10 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 18,
-    width: 200,
+    // width: 200,
     // borderWidth: 1,
     fontWeight: "600",
+    
     color: "#173430",
     marginBottom: 2,
   },

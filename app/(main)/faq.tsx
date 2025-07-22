@@ -1,11 +1,7 @@
-import { View, Text } from "react-native";
+import FaqScreen from "@/features/avatar/faq/screens/FAQScreen";
 
 const Faq = () => {
-    return (
-        <View>
-            <Text>Faq</Text>
-        </View>
-    )
-}
+  return <FaqScreen />;
+};
 
 export default Faq;

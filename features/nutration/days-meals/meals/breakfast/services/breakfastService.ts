@@ -103,25 +103,31 @@ export const removeFoodItem = (itemId: string) => {
 };
 
 export const fetchFoods = async (searchTerm = 'breakfast') => {
-  const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(searchTerm)}&search_simple=1&action=process&json=1`;
-  const response = await axios.get(url);
-  // Map the API response to your FoodItem type, filter out items with no name
-  return response.data.products
-    .filter((product: any) => !!product.product_name)
+  const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(searchTerm)}&search_simple=1&action=process&json=1&lc=en&fields=code,product_name_en,image_url,nutriments,categories`;
+  const response = await axios.get(url, {
+    headers: {
+      'User-Agent': 'ATPiaApp/1.0 (your@email.com)'
+    }
+  });
+  const products = response.data.products
+    .filter((product: any) => !!product.product_name_en && typeof product.product_name_en === 'string' && product.product_name_en.trim().length > 0)
     .map((product: any) => ({
-      id: product.id || product._id || product.code,
-      name: product.product_name,
-      // the decimal is 2
-      kcal:
-        Number(Number(product.nutriments?.["energy-kcal_100g"]).toFixed(2)) ||
-        0,
-      protein:
-        Number(Number(product.nutriments?.["proteins_100g"]).toFixed(2)) || 0,
-      carbs:
-        Number(Number(product.nutriments?.["carbohydrates_100g"]).toFixed(2)) ||
-        0,
+      id: product.code,
+      name: product.product_name_en.trim(),
+      kcal: Number(Number(product.nutriments?.["energy-kcal_100g"]).toFixed(2)) || 0,
+      protein: Number(Number(product.nutriments?.["proteins_100g"]).toFixed(2)) || 0,
+      carbs: Number(Number(product.nutriments?.["carbohydrates_100g"]).toFixed(2)) || 0,
       fat: Number(Number(product.nutriments?.["fat_100g"]).toFixed(2)) || 0,
       image: product.image_url,
       category: product.categories,
     }));
+  // Deduplicate by name (case-insensitive)
+  const seenNames = new Set<string>();
+  const uniqueProducts = products.filter((p: { name: string }) => {
+    const lower = p.name.toLowerCase();
+    if (seenNames.has(lower)) return false;
+    seenNames.add(lower);
+    return true;
+  });
+  return uniqueProducts;
 }; 

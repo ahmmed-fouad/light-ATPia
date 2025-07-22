@@ -1,3 +1,11 @@
-import BreakfastScreen from "@/features/nutration/days-meals/meals/breakfast/main/screens/BreakfastScreen";
+import { Text, View } from "react-native";
 
-export default BreakfastScreen;
+const LunchScreen = () => {
+    return (
+        <View>
+            <Text>Lunch</Text>
+        </View>
+    )
+}
+
+export default LunchScreen;

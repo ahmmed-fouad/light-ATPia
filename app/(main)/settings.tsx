@@ -1,11 +1,7 @@
-import { View, Text } from "react-native";
+import SettingsScreen from "@/features/avatar/settings/screens/SettingsScreen";
 
 const Settings = () => {
-    return (
-        <View>
-            <Text>Settings</Text>
-        </View>
-    )
+    return <SettingsScreen />;
 }
 
 export default Settings;
