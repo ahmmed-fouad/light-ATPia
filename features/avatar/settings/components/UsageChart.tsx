@@ -45,11 +45,11 @@ const UsageChart = () => {
 };
 
 const chartConfig = {
-  backgroundGradientFrom: '#fff',
-  backgroundGradientTo: '#fff',
+  backgroundGradientFrom: "#fff",
+  backgroundGradientTo: "#fff",
   color: (opacity = 1) => `rgba(99, 102, 241, ${opacity})`,
   labelColor: (opacity = 1) => `rgba(51, 65, 85, ${opacity})`,
-  fillShadowGradient: '#6366f1',
+  fillShadowGradient: "#9cd02e",
   fillShadowGradientOpacity: 1,
   decimalPlaces: 0,
   barPercentage: 0.6,

@@ -19,7 +19,7 @@ const AppInfoCard = () => {
       <View style={styles.linksList}>
         {legalLinks.map(link => (
           <TouchableOpacity key={link.url} style={styles.linkRow} onPress={() => openLink(link.url)}>
-            <FileText size={18} color="#6366f1" style={{ marginRight: 8 }} />
+            <FileText size={18} color="#18b888" style={{ marginRight: 8 }} />
             <Text style={styles.linkText}>{link.label}</Text>
           </TouchableOpacity>
         ))}
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   linkText: {
     fontSize: 15,
-    color: '#6366f1',
+    color: '#18b888',
     fontWeight: '700',
   },
 });

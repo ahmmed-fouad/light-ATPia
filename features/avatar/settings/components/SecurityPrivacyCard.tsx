@@ -29,7 +29,7 @@ const SecurityPrivacyCard = () => {
         keyExtractor={(_, i) => i.toString()}
         renderItem={({ item }) => (
           <View style={styles.loginRow}>
-            <Monitor size={18} color="#6366f1" style={{ marginRight: 8 }} />
+            <Monitor size={18} color="#18b888" style={{ marginRight: 8 }} />
             <View style={{ flex: 1 }}>
               <Text style={styles.loginDevice}>{item.device}</Text>
               <Text style={styles.loginMeta}>{item.location} • {item.date}</Text>
