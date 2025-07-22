@@ -1,7 +1,7 @@
 import { ScrollAwareView } from '@/components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   AddFoodButton,
   BreakfastChart,
@@ -18,6 +18,13 @@ const BreakfastScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [chosenItems, setChosenItems] = useState<FoodItem[]>([]);
   const [doneIds, setDoneIds] = useState<string[]>([]);
+  const [chartCurves, setChartCurves] = useState({
+    kcal: [0],
+    carbs: [0],
+    fat: [0],
+    protein: [0],
+    date: new Date().toISOString().slice(0, 10),
+  });
 
   // Helper to get today's 08:00 AM as a Date
   const getToday8AM = () => {
@@ -90,6 +97,67 @@ const BreakfastScreen = () => {
     AsyncStorage.setItem('doneIds', JSON.stringify(doneIds));
   }, [doneIds]);
 
+  // Load chartCurves from AsyncStorage on mount
+  useEffect(() => {
+    const loadCurves = async () => {
+      try {
+        const stored = await AsyncStorage.getItem('breakfastChartCurves');
+        if (stored) {
+          setChartCurves(JSON.parse(stored));
+        }
+      } catch {}
+    };
+    loadCurves();
+  }, []);
+
+  // Calculate progress from done chosen items
+  const doneChosenItems = chosenItems.filter(item => doneIds.includes(item.id));
+  const doneProgress = {
+    currentKcal: doneChosenItems.reduce((sum, item) => sum + (item.kcal || 0), 0),
+    targetKcal: data.progress.targetKcal,
+    currentCarbs: doneChosenItems.reduce((sum, item) => sum + (item.carbs || 0), 0),
+    targetCarbs: data.progress.targetCarbs,
+    currentFat: doneChosenItems.reduce((sum, item) => sum + (item.fat || 0), 0),
+    targetFat: data.progress.targetFat,
+    currentProtein: doneChosenItems.reduce((sum, item) => sum + (item.protein || 0), 0),
+    targetProtein: data.progress.targetProtein,
+  };
+
+  // On every change in doneProgress, append new values to the arrays and persist
+  useEffect(() => {
+    setChartCurves(prevCurves => {
+      const today = new Date().toISOString().slice(0, 10);
+      const lastKcal = prevCurves.kcal[prevCurves.kcal.length - 1];
+      const lastCarbs = prevCurves.carbs[prevCurves.carbs.length - 1];
+      const lastFat = prevCurves.fat[prevCurves.fat.length - 1];
+      const lastProtein = prevCurves.protein[prevCurves.protein.length - 1];
+
+      const newCarbs = doneProgress.currentCarbs * 4;
+      const newFat = doneProgress.currentFat * 4;
+      const newProtein = doneProgress.currentProtein * 4;
+
+      const shouldAppend =
+        doneProgress.currentKcal !== lastKcal ||
+        newCarbs !== lastCarbs ||
+        newFat !== lastFat ||
+        newProtein !== lastProtein;
+
+      if (shouldAppend) {
+        const newCurves = {
+          kcal: [...prevCurves.kcal, doneProgress.currentKcal],
+          carbs: [...prevCurves.carbs, newCarbs],
+          fat: [...prevCurves.fat, newFat],
+          protein: [...prevCurves.protein, newProtein],
+          date: today,
+        };
+        AsyncStorage.setItem('breakfastChartCurves', JSON.stringify(newCurves));
+        console.log('BreakfastChart Curves:', newCurves);
+        return newCurves;
+      }
+      return prevCurves;
+    });
+  }, [doneProgress]);
+
   const handleAddFood = () => {
     // TODO: Implement add food functionality
     console.log('Add food pressed');
@@ -126,88 +194,147 @@ const BreakfastScreen = () => {
     : data.foodItems;
   const isSearching = searchQuery.length > 0;
 
-  // Calculate progress from done chosen items
-  const doneChosenItems = chosenItems.filter(item => doneIds.includes(item.id));
-  const doneProgress = {
-    currentKcal: doneChosenItems.reduce((sum, item) => sum + (item.kcal || 0), 0),
-    targetKcal: data.progress.targetKcal,
-    currentCarbs: doneChosenItems.reduce((sum, item) => sum + (item.carbs || 0), 0),
-    targetCarbs: data.progress.targetCarbs,
-    currentFat: doneChosenItems.reduce((sum, item) => sum + (item.fat || 0), 0),
-    targetFat: data.progress.targetFat,
-    currentProtein: doneChosenItems.reduce((sum, item) => sum + (item.protein || 0), 0),
-    targetProtein: data.progress.targetProtein,
-  };
-
   return (
-      <View style={styles.container}>
-        <ScrollAwareView
-        showsVerticalScrollIndicator={false}
-      >
-      <ScrollView 
-        style={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
-      <BreakfastHeader />
-      <SearchBar 
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
-      {/* Only show chart and description if not searching */}
-      {!isSearching && (
-        <>
-          <BreakfastChart progress={doneProgress} />
-          <DescriptionCard progress={doneProgress} />
-        </>
-      )}
-      {/* Chosen Breakfast Section */}
-      {!isSearching && (
-        <View style={styles.chosenSection}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8}}>
-            <Text style={{fontSize: 20, fontWeight: '500', color: '#173430'}}>Chosen Breakfast</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#18b888', borderRadius: 22, paddingHorizontal: 18, paddingVertical: 4}}>
-              <Text style={{color: '#fff', fontSize: 16, fontWeight: '700'}}>{chosenItems.length}</Text>
-            </View>
-          </View>
-          {chosenItems.length === 0 ? (
-            <View style={styles.placeholderBox}>
-              <Text style={{color: '#9ca3af', fontSize: 16}}>add your breakfast meals</Text>
-            </View>
-          ) : (
-            <View>
-              {chosenItems.map(item => (
-                <FoodItemCard
-                  key={item.id}
-                  item={item}
-                  onRemove={handleRemoveFromChosen}
-                  onDone={() => handleMarkDone(item.id)}
-                  isDone={doneIds.includes(item.id)}
-                />
-              ))}
+    <View style={styles.container}>
+      <ScrollAwareView showsVerticalScrollIndicator={false}>
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          <BreakfastHeader />
+          <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
+          {/* Only show chart and description if not searching */}
+          {!isSearching && (
+            <>
+              <BreakfastChart chartCurves={chartCurves} />
+              {/* Reset Chart Curves Button for testing */}
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#18b888",
+                  paddingVertical: 10,
+                  paddingHorizontal: 24,
+                  borderRadius: 22,
+                  alignSelf: "center",
+                  marginBottom: 22,
+                }}
+                onPress={async () => {
+                  const today = new Date().toISOString().slice(0, 10);
+                  const resetCurves = {
+                    kcal: [0],
+                    carbs: [0],
+                    fat: [0],
+                    protein: [0],
+                    date: today,
+                  };
+                  setChartCurves(resetCurves);
+                  await AsyncStorage.setItem(
+                    "breakfastChartCurves",
+                    JSON.stringify(resetCurves)
+                  );
+                  console.log("BreakfastChart Curves RESET:", resetCurves);
+                }}
+              >
+                <Text
+                  style={{ color: "#fff", fontWeight: "bold", fontSize: 16 }}
+                >
+                  Reset Chart Curves
+                </Text>
+              </TouchableOpacity>
+              <DescriptionCard progress={doneProgress} />
+            </>
+          )}
+          {/* Chosen Breakfast Section */}
+          {!isSearching && (
+            <View style={styles.chosenSection}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: 8,
+                }}
+              >
+                <Text
+                  style={{ fontSize: 20, fontWeight: "500", color: "#173430" }}
+                >
+                  Chosen Breakfast
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#18b888",
+                    borderRadius: 22,
+                    paddingHorizontal: 18,
+                    paddingVertical: 4,
+                  }}
+                >
+                  <Text
+                    style={{ color: "#fff", fontSize: 16, fontWeight: "700" }}
+                  >
+                    {chosenItems.length}
+                  </Text>
+                </View>
+              </View>
+              {chosenItems.length === 0 ? (
+                <View style={styles.placeholderBox}>
+                  <Text style={{ color: "#9ca3af", fontSize: 16 }}>
+                    add your breakfast meals
+                  </Text>
+                </View>
+              ) : (
+                <View style={{ marginHorizontal: -24, gap: 18 }}>
+                  {chosenItems.map((item) => (
+                    <FoodItemCard
+                      key={item.id}
+                      item={item}
+                      onRemove={handleRemoveFromChosen}
+                      onDone={() => handleMarkDone(item.id)}
+                      isDone={doneIds.includes(item.id)}
+                    />
+                  ))}
+                </View>
+              )}
             </View>
           )}
-        </View>
-      )}
-      {/* Header Section */}
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 24, paddingVertical: 16}}>
-        <Text style={{fontSize: 22, fontWeight: '500', color: '#173430'}}>
-          {isSearching ? 'Search result' : 'Breakfast Log'}
-        </Text>
-        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#18b888', borderRadius: 22, paddingHorizontal: 25, paddingVertical: 8}}>
-          <Text style={{color: '#fff', fontSize: 18, fontWeight: '700'}}>{filteredItems.length}</Text>
-        </View>
-      </View>
-      <View style={styles.foodList}>
-        {filteredItems.map(item => (
-          <FoodItemCard 
-            key={item.id} 
-            item={item} 
-            onRemove={handleRemoveFood}
-            onEdit={() => handleAddToChosen(item)}
-          />
-        ))}
-      </View>
-      </ScrollView>
+          {/* Header Section */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingHorizontal: 24,
+              paddingVertical: 16,
+            }}
+          >
+            <Text style={{ fontSize: 22, fontWeight: "500", color: "#173430" }}>
+              {isSearching ? "Search result" : "Breakfast Log"}
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#18b888",
+                borderRadius: 22,
+                paddingHorizontal: 25,
+                paddingVertical: 8,
+              }}
+            >
+              <Text style={{ color: "#fff", fontSize: 18, fontWeight: "700" }}>
+                {filteredItems.length}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.foodList}>
+            {filteredItems.map((item) => (
+              <FoodItemCard
+                key={item.id}
+                item={item}
+                onRemove={handleRemoveFood}
+                onEdit={() => handleAddToChosen(item)}
+              />
+            ))}
+          </View>
+        </ScrollView>
       </ScrollAwareView>
       <AddFoodButton onPress={handleAddFood} />
     </View>
@@ -217,7 +344,7 @@ const BreakfastScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   content: {
     flex: 1,
@@ -225,29 +352,31 @@ const styles = StyleSheet.create({
 
   foodList: {
     marginTop: 8,
+    gap: 18,
   },
   chosenSection: {
     marginTop: 8,
     marginHorizontal: 24,
     marginBottom: 8,
-    padding: 12,
-    backgroundColor: '#f7f7f7',
+    paddingHorizontal: 12,
+    paddingVertical: 16,
+    backgroundColor: "#ebf6d6",
     borderRadius: 16,
   },
   placeholderBox: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 16,
   },
   chosenCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
     borderRadius: 12,
-    paddingHorizontal: 12,
+    // paddingHorizontal: 12,
     paddingVertical: 8,
     marginRight: 8,
     marginBottom: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowRadius: 2,
     shadowOffset: { width: 0, height: 1 },

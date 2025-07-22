@@ -26,7 +26,7 @@ const FoodItemCard: React.FC<FoodItemCardProps> = ({ item, onRemove, onEdit, onD
   };
 
   return (
-    <View style={[styles.container, isDone ? { opacity: 0.5 } : null]}>
+    <View style={[styles.container, isDone ? { opacity: 0.5 } : null, { marginHorizontal: 24 }]}>
       <View style={styles.leftSection}>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1, paddingBottom: 12}}>
           <Text style={styles.emoji}>{getFoodEmoji(item.name)}</Text>
@@ -97,8 +97,7 @@ const styles = StyleSheet.create({
     // padding: 16,
     paddingHorizontal: 28,
     paddingVertical: 24,
-    marginHorizontal: 24,
-    marginBottom: 22,
+    // marginBottom: 22,
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 4,

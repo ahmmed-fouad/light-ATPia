@@ -1,39 +1,44 @@
 import React from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { BreakfastProgress } from '../types/breakfastTypes';
 
 const { width } = Dimensions.get('window');
 const CHART_WIDTH = width + 48; // 24px padding on each side
-const CHART_HEIGHT = 300;
+const CHART_HEIGHT = 250;
 const GRID_COUNT = 6;
 
 interface BreakfastChartProps {
-  progress: BreakfastProgress;
+  chartCurves: {
+    kcal: number[];
+    carbs: number[];
+    fat: number[];
+    protein: number[];
+    date: string;
+  };
 }
 
-const BreakfastChart: React.FC<BreakfastChartProps> = ({ progress }) => {
+const BreakfastChart: React.FC<BreakfastChartProps> = ({ chartCurves }) => {
   // Create chart data for the week (7 days) - all starting from same point
   const chartData = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    labels: chartCurves.kcal.map((_, i) => `Day ${i + 1}`),
     datasets: [
       {
-        data: [0, 100, 250, 180, 200, 300, progress.currentKcal],
+        data: chartCurves.kcal,
         color: () => '#9cd030',
         strokeWidth: 3,
       },
       {
-        data: [0, 80, 200, 150, 300, 280, progress.currentCarbs * 6],
+        data: chartCurves.carbs,
         color: () => '#ff395d',
         strokeWidth: 2,
       },
       {
-        data: [0, 60, 150, 120, 250, 200, progress.currentFat * 5],
+        data: chartCurves.fat,
         color: () => '#ff8c39',
         strokeWidth: 2,
       },
       {
-        data: [0, 40, 100, 80, 180, 160, progress.currentProtein * 10],
+        data: chartCurves.protein,
         color: () => '#8539fe',
         strokeWidth: 2,
       },
@@ -132,11 +137,12 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 24,
     marginHorizontal: 24,
-    marginBottom: 24,
+    marginBottom: 12,
+    overflow: "hidden",
   },
   header: {
     alignItems: "center",
-    marginBottom: 24,
+    marginBottom: 12,
   },
   title: {
     fontSize: 18,
@@ -176,7 +182,6 @@ const styles = StyleSheet.create({
   legend: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 16,
     width: "100%",
   },
   legendItem: {
