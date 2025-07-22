@@ -15,9 +15,7 @@ const PersonalProgramScreen = () => {
   return (
     <SafeAreaView style={styles.root}>
       <ScrollAwareView
-        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
-        // style={styles.scrollView}
       >
         <View style={styles.headerRow}></View>
         <ScrollView
@@ -140,9 +138,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     paddingTop: 80, // Account for top bar height
-  },
-  scrollContent: {
-    // paddingBottom: -94,
   },
 });
 

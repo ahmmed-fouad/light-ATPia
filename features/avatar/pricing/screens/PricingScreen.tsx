@@ -1,25 +1,30 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
 import PlansGrid from '../components/PlansGrid';
 import PlansRadarChart from '../components/PlansRadarChart';
 import PlansFAQ from '../components/PlansFAQ';
+import { ScrollAwareView } from '@/components';
 
 const PricingScreen: React.FC = () => {
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={styles.root}>
+      <ScrollAwareView
+        showsVerticalScrollIndicator={false}
+      >
+    <ScrollView showsVerticalScrollIndicator={false}>
       <Text style={styles.pageHeader}>Plans & Pricing</Text>
       <PlansGrid />
       <PlansRadarChart />
       <PlansFAQ />
     </ScrollView>
+    </ScrollAwareView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: '#f1f5f9',
-    flexGrow: 1,
+  root: {
+    flex: 1,
   },
   pageHeader: {
     fontSize: 26,

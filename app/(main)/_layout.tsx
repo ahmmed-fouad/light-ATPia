@@ -3,6 +3,7 @@ import { images } from "@/constans";
 import { ChatDrawer } from "@/features/ai/chatbot/components/drawer/ChatDrawer";
 import { ChatService } from "@/features/ai/chatbot/services/chatService";
 import { useChatStore } from "@/features/ai/chatbot/stores/chatStore";
+import { useSettingsStore } from '@/features/avatar/settings/stores/settingsStore';
 import { useHomeData } from "@/features/home/hooks/useHomeData";
 import MenuDropdown from "@/features/menu/components/MenuDropdown";
 import { useMenuDropdown } from "@/features/menu/hooks";
@@ -208,6 +209,7 @@ const MainLayout = () => {
   };
 
   const { homeData, loading } = useHomeData();
+  const avatarUrl = useSettingsStore(s => s.profile.photo);
 
   // Notifications dropdown hook
   const {
@@ -258,7 +260,7 @@ const MainLayout = () => {
               ]}
             >
               <Animated.Image
-                source={{ uri: homeData?.user.avatarUrl }}
+                source={avatarUrl ? { uri: avatarUrl } : require('@/assets/images/avatar.png') || {uri: homeData?.user.avatarUrl}}
                 style={{
                   width: 60,
                   height: 60,
