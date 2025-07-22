@@ -13,7 +13,7 @@ import { useScrollToHide } from "@/hooks/useScrollToHide";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Slot, usePathname, useRouter } from "expo-router";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -53,6 +53,24 @@ const MainLayout = () => {
 
   // User profile dropdown state
   const [isProfileDropdownVisible, setIsProfileDropdownVisible] = useState(false);
+  const [isProfileExpanded, setIsProfileExpanded] = useState(false);
+  const avatarRotation = useRef(new Animated.Value(0)).current;
+
+  const toggleProfile = () => {
+    const next = !isProfileExpanded;
+    setIsProfileExpanded(next);
+    Animated.timing(avatarRotation, {
+      toValue: next ? 1 : 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+    setIsProfileDropdownVisible(next);
+  };
+
+  const avatarSpin = avatarRotation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
 
   // Handle profile dropdown toggle
   const toggleProfileDropdown = () => {
@@ -89,21 +107,21 @@ const MainLayout = () => {
     // Animate icons container
     Animated.timing(iconsAnimation, {
       toValue,
-      duration: 200,
+      duration: 300,
       useNativeDriver: false,
     }).start();
 
     // Animate chevron rotation (360° clockwise)
     Animated.timing(chevronRotation, {
       toValue: isIconsExpanded ? 0 : 1,
-      duration: 100,
+      duration: 300,
       useNativeDriver: true,
     }).start();
 
     // Animate logo rotation (360° clockwise when chevron is pressed)
     Animated.timing(logoChevronRotation, {
       toValue: isIconsExpanded ? 0 : 1,
-      duration: 200,
+      duration: 300,
       useNativeDriver: true,
     }).start();
   };
@@ -115,7 +133,7 @@ const MainLayout = () => {
 
     Animated.timing(logoIndependentRotation, {
       toValue: newDirection,
-      duration: 500,
+      duration: 300,
       useNativeDriver: true,
     }).start();
   };
@@ -232,25 +250,34 @@ const MainLayout = () => {
           <View className="flex-row items-center space-x-3">
             {/* User Profile Section */}
             <TouchableOpacity
-              onPress={toggleProfileDropdown}
-              style={styles.userProfileContainer}
+              onPress={toggleProfile}
+              activeOpacity={0.8}
+              style={[
+                styles.userProfileContainer,
+                { flexDirection: 'row', alignItems: 'center', paddingRight: 8, paddingLeft: 0, minWidth: 85, maxWidth: isProfileExpanded ? 180 : 60 }
+              ]}
             >
-              <View className="flex-row items-center">
-                <Image
-                  style={{ width: 60, height: 60, borderRadius: 100 }}
-                  source={{ uri: homeData?.user.avatarUrl }}
-                  resizeMode="contain"
-                />
-                <Text className="text-gray-500 ml-2 text-xl font-bold">
+              <Animated.Image
+                source={{ uri: homeData?.user.avatarUrl }}
+                style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: 100,
+                  transform: [{ rotate: avatarSpin }],
+                }}
+                resizeMode="contain"
+              />
+              {isProfileExpanded && (
+                <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold", marginLeft: 8 }}>
                   User
                 </Text>
-                <FontAwesome5
-                  name="chevron-down"
-                  size={16}
-                  color="#374151"
-                  style={{ marginLeft: 8 }}
-                />
-              </View>
+              )}
+              <FontAwesome5
+                name={isProfileExpanded ? "chevron-down" : "chevron-right"}
+                size={16}
+                color="#fff"
+                style={{ paddingHorizontal: 8, paddingTop: 3 }}
+              />
             </TouchableOpacity>
           </View>
 
@@ -282,9 +309,9 @@ const MainLayout = () => {
                 }}
               >
                 {isIconsExpanded ? (
-                  <ChevronRight size={25} color="#22C55E" />
+                  <ChevronRight size={25} color="#fff" />
                 ) : (
-                  <ChevronLeft size={25} color="#22C55E" />
+                  <ChevronLeft size={25} color="#fff" />
                 )}
               </Animated.View>
             </TouchableOpacity>
@@ -308,53 +335,65 @@ const MainLayout = () => {
                 ]}
               >
                 <TouchableOpacity onPress={() => {}}>
-                  <FontAwesome5 name="calendar-alt" size={24} color="#22C55E" />
+                  <FontAwesome5 name="calendar-alt" size={24} color="#bce2bd" />
                 </TouchableOpacity>
 
                 {/* bell */}
                 <TouchableOpacity onPress={toggleNotificationsDropdown}>
-                  <FontAwesome5 name="bell" size={25} color="#22C55E" />
+                  <FontAwesome5 name="bell" size={25} color="#bce2bd" />
                 </TouchableOpacity>
 
                 {/* menu */}
                 <TouchableOpacity onPress={toggleMenuDropdown}>
-                  <FontAwesome5 name="bars" size={25} color="#22C55E" />
+                  <FontAwesome5 name="bars" size={25} color="#bce2bd" />
                 </TouchableOpacity>
               </Animated.View>
             )}
-            <Animated.View
-              style={{
-                transform: [
-                  {
-                    rotate: logoChevronRotation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: ["0deg", "360deg"],
-                    }),
-                  },
-                  {
-                    rotate: logoIndependentRotation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: ["0deg", "180deg"],
-                    }),
-                  },
-                ],
-                position: "absolute",
-                right: 0,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+            <TouchableOpacity
+              onPress={toggleIcons}
+              style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', right: 0 }}
             >
-              <TouchableOpacity
-                onPress={rotateLogo}
-                style={styles.logoContainer}
+              <Animated.View
+                style={{
+                  transform: [
+                    {
+                      rotate: chevronRotation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ["0deg", "180deg"],
+                      }),
+                    },
+                  ],
+                  marginRight: 4,
+                }}
+              >
+              </Animated.View>
+              <Animated.View
+                style={{
+                  transform: [
+                    {
+                      rotate: logoChevronRotation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ["0deg", "360deg"],
+                      }),
+                    },
+                    {
+                      rotate: logoIndependentRotation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ["0deg", "180deg"],
+                      }),
+                    },
+                  ],
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
                 <Image
                   source={images.ATPiaLogo}
-                  style={{ width: 60, height: 60 }}
+                  style={{ width: 60, height: 60}}
                   resizeMode="contain"
                 />
-              </TouchableOpacity>
-            </Animated.View>
+              </Animated.View>
+            </TouchableOpacity>
           </Animated.View>
         </Animated.View>
 
@@ -372,7 +411,15 @@ const MainLayout = () => {
         {/* User Profile Dropdown */}
         <UserProfileDropdown
           isVisible={isProfileDropdownVisible}
-          onClose={() => setIsProfileDropdownVisible(false)}
+          onClose={() => {
+            setIsProfileDropdownVisible(false);
+            setIsProfileExpanded(false);
+            Animated.timing(avatarRotation, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }).start();
+          }}
           onMenuItemPress={handleProfileMenuItemPress}
         />
 
@@ -402,7 +449,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 10,
-    backgroundColor: "#f7f7f7",
+    backgroundColor: "#ebf6d6",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -410,9 +457,9 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 2,
     height: 80, // Fixed height for consistent animation
-    marginTop: 60,
+    marginTop: 50,
   },
   topBarRight: {
     minWidth: 85,
@@ -420,8 +467,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#173430",
     borderRadius: 30,
-    paddingLeft: 4,
-    position: 'relative',
+    paddingLeft: 2,
+    position: "relative",
   },
   toggleButton: {
     height: 60,
@@ -433,16 +480,21 @@ const styles = StyleSheet.create({
     gap: 20,
     alignItems: "center",
     paddingLeft: 5,
-    paddingRight: 80, // Give space for the logo
+    paddingRight: 120,
+    marginRight: 52,
   },
   logoContainer: {
     width: 60,
     height: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   userProfileContainer: {
-    paddingHorizontal: 5,
+    // paddingLeft: 5,
+    backgroundColor: "#25443f",
+    borderRadius: 30,
+    // padding: 10,
+    // marginRight: 10,
   },
 });
 
