@@ -25,7 +25,7 @@ const ToggleFooter: React.FC<ToggleFooterProps> = ({ open, onToggle, activities 
     }).start();
   }, [open]);
 
-  const CLOSED_OFFSET = 535; // Only the handle remains visible (tweak as needed)
+  const CLOSED_OFFSET = 485; // Only the handle remains visible (tweak as needed)
   const translateY = anim.interpolate({
     inputRange: [0, 1],
     outputRange: [CLOSED_OFFSET, 0],
@@ -111,11 +111,6 @@ const ToggleFooter: React.FC<ToggleFooterProps> = ({ open, onToggle, activities 
           ))}
         </View>
       </Animated.View>
-      
-      {/* <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Explore home</Text>
-        <Feather name="arrow-right" size={20} color="#fff" />
-      </TouchableOpacity> */}
     </Animated.View>
   );
 };
@@ -125,28 +120,21 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: -110,
+    bottom: 0,
     marginBottom: 0,
     backgroundColor: '#13332B',
     borderRadius: 32,
-    paddingHorizontal: 14,
-    marginHorizontal: 37,
-    paddingBottom: 90,
+    paddingHorizontal: 8,
+    marginHorizontal: 20,
+    // paddingBottom: 80,
     zIndex: 0,
   },
   handle: {
     alignItems: 'center',
     marginBottom: 16,
-    paddingVertical: 12,
+    paddingTop: 12,
     paddingHorizontal: 20,
   },
-  // handleBar: {
-  //   width: 90,
-  //   height: 4,
-  //   borderRadius: 2,
-  //   backgroundColor: '#fff',
-  //   marginBottom: 8,
-  // },
   handleIcon: {
     marginTop: 0,
   },
@@ -157,27 +145,27 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '700',
     fontSize: 20,
-    marginBottom: 9,
+    marginBottom: 5,
     textAlign: 'center',
   },
   subtitle: {
     color: '#74d4b8',
     fontSize: 16,
-    marginBottom: 34,
+    marginBottom: 10,
     textAlign: 'center',
   },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 34,
+    // marginBottom: 60,
   },
   button: {
     backgroundColor: '#18b888',
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 20,
+    paddingVertical: 10,
     paddingHorizontal: 24,
     flexDirection: 'row',
   },

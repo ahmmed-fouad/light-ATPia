@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 12,
     marginTop: 8,
-    gap: 2,
+    gap: 10,
   },
   card: {
     flex: 1,

@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FoodItem } from '../types/breakfastTypes';
 
 interface FoodItemCardProps {
@@ -29,7 +29,8 @@ const FoodItemCard: React.FC<FoodItemCardProps> = ({ item, onRemove, onEdit, onD
     <View style={[styles.container, isDone ? { opacity: 0.5 } : null, { marginHorizontal: 24 }]}>
       <View style={styles.leftSection}>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1, paddingBottom: 12}}>
-          <Text style={styles.emoji}>{getFoodEmoji(item.name)}</Text>
+         <Image source={{uri: item.image}} style={{width: 50, height: 50, borderRadius: 10, marginRight: 12}} />
+          {/* <Text style={styles.emoji}>{getFoodEmoji(item.name)}</Text> */}
           <View style={styles.info}>
             <Text style={styles.name}>{item.name}</Text>
             <Text style={styles.serving}>1 serving</Text>

@@ -10,6 +10,7 @@ import {
   FoodItemCard,
   SearchBar
 } from '../components';
+import { fetchFoods } from '../services/breakfastService';
 import { useBreakfastStore } from '../stores/breakfastStore';
 import { FoodItem } from '../types/breakfastTypes';
 
@@ -25,6 +26,9 @@ const BreakfastScreen = () => {
     protein: [0],
     date: new Date().toISOString().slice(0, 10),
   });
+  const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Helper to get today's 08:00 AM as a Date
   const getToday8AM = () => {
@@ -125,26 +129,29 @@ const BreakfastScreen = () => {
 
   // On every change in doneProgress, append new values to the arrays and persist
   useEffect(() => {
+    const round2 = (val: number) => Math.round((val + Number.EPSILON) * 100) / 100;
+    const safeNumber = (val: any) => (Number.isFinite(val) ? val : 0);
     setChartCurves(prevCurves => {
       const today = new Date().toISOString().slice(0, 10);
-      const lastKcal = prevCurves.kcal[prevCurves.kcal.length - 1];
-      const lastCarbs = prevCurves.carbs[prevCurves.carbs.length - 1];
-      const lastFat = prevCurves.fat[prevCurves.fat.length - 1];
-      const lastProtein = prevCurves.protein[prevCurves.protein.length - 1];
+      const lastKcal = round2(safeNumber(prevCurves.kcal[prevCurves.kcal.length - 1]));
+      const lastCarbs = round2(safeNumber(prevCurves.carbs[prevCurves.carbs.length - 1]));
+      const lastFat = round2(safeNumber(prevCurves.fat[prevCurves.fat.length - 1]));
+      const lastProtein = round2(safeNumber(prevCurves.protein[prevCurves.protein.length - 1]));
 
-      const newCarbs = doneProgress.currentCarbs * 4;
-      const newFat = doneProgress.currentFat * 4;
-      const newProtein = doneProgress.currentProtein * 4;
+      const newKcal = round2(safeNumber(doneProgress.currentKcal));
+      const newCarbs = round2(safeNumber(doneProgress.currentCarbs * 4));
+      const newFat = round2(safeNumber(doneProgress.currentFat * 4));
+      const newProtein = round2(safeNumber(doneProgress.currentProtein * 4));
 
       const shouldAppend =
-        doneProgress.currentKcal !== lastKcal ||
+        newKcal !== lastKcal ||
         newCarbs !== lastCarbs ||
         newFat !== lastFat ||
         newProtein !== lastProtein;
 
       if (shouldAppend) {
         const newCurves = {
-          kcal: [...prevCurves.kcal, doneProgress.currentKcal],
+          kcal: [...prevCurves.kcal, newKcal],
           carbs: [...prevCurves.carbs, newCarbs],
           fat: [...prevCurves.fat, newFat],
           protein: [...prevCurves.protein, newProtein],
@@ -157,6 +164,25 @@ const BreakfastScreen = () => {
       return prevCurves;
     });
   }, [doneProgress]);
+
+  // Fetch real food data on mount and when searchQuery changes
+  useEffect(() => {
+    let isMounted = true;
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const items = await fetchFoods(searchQuery || 'breakfast');
+        if (isMounted) setFoodItems(items);
+      } catch (e) {
+        if (isMounted) setError('Failed to fetch foods');
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    fetchData();
+    return () => { isMounted = false; };
+  }, [searchQuery]);
 
   const handleAddFood = () => {
     // TODO: Implement add food functionality
@@ -187,15 +213,17 @@ const BreakfastScreen = () => {
   };
 
   // Filter food items based on search query
-  const filteredItems = searchQuery
-    ? data.foodItems.filter(item =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : data.foodItems;
+  const filteredItems = foodItems;
   const isSearching = searchQuery.length > 0;
 
   return (
     <View style={styles.container}>
+      {loading && (
+        <Text style={{ textAlign: 'center', marginTop: 24, color: '#18b888', fontWeight: 'bold' }}>Loading foods...</Text>
+      )}
+      {error && (
+        <Text style={{ textAlign: 'center', marginTop: 24, color: 'red', fontWeight: 'bold' }}>{error}</Text>
+      )}
       <ScrollAwareView showsVerticalScrollIndicator={false}>
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           <BreakfastHeader />

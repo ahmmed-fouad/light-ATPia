@@ -1,4 +1,5 @@
 import { ScrollAwareView } from "@/components";
+import { router } from "expo-router";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -50,36 +51,6 @@ const HomeScreen = () => {
 
           }}
         >
-          {/* <TouchableOpacity
-            style={{
-              backgroundColor: "#173430",
-              padding: 10,
-              borderRadius: 10,
-              margin: 10,
-              width: 150,
-              alignItems: "center",
-            }}
-            onPress={() => router.push("/(main)/(nutrition)/days-meals")}
-          >
-            <Text style={{ color: "#fff", fontSize: 16, fontWeight: "700" }}>
-              Days's Meals
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#173430",
-              padding: 10,
-              borderRadius: 10,
-              margin: 10,
-              width: 150,
-              alignItems: "center",
-            }}
-            onPress={() => router.push("/(main)/(tracking)/personal-program")}
-          >
-            <Text style={{ color: "#fff", fontSize: 16, fontWeight: "700" }}>
-              Personal Program
-            </Text>
-          </TouchableOpacity>
           <TouchableOpacity
             style={{
               backgroundColor: "#173430",
@@ -94,7 +65,7 @@ const HomeScreen = () => {
             <Text style={{ color: "#fff", fontSize: 16, fontWeight: "700" }}>
               Onboarding
             </Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity> 
         </View>
         <CalorieProgress
           calories={homeData.calorieProgress.calories}
@@ -103,27 +74,49 @@ const HomeScreen = () => {
         <MacroSummary macros={homeData.macros} />
         <View style={styles.sectionTitleContainer}>
           <Text style={styles.sectionTitle}>Today's Meal</Text>
-          <TouchableOpacity style={styles.dotsButton}>
+          <TouchableOpacity
+          onPress={() => router.push("/(main)/(nutrition)/days-meals")}
+          style={styles.dotsButton}>
             <View style={styles.dotsContainer}>
               <Text style={styles.dotsText}>...</Text>
             </View>
           </TouchableOpacity>
         </View>
         <View style={styles.cardList}>
-          {homeData.meals.map((meal) => (
-            <MealCard
-              key={meal.id}
-              image={meal.image}
-              label={meal.label}
-              foods={meal.foods}
-              calories={meal.calories}
-              totalCalories={meal.totalCalories}
-            />
-          ))}
+          {homeData.meals.map((meal) => {
+            // Map meal label to route
+            let route = "";
+            switch (meal.label.toLowerCase()) {
+              case "breakfast":
+                route = "/(main)/(nutrition)/breakfast";
+                break;
+              case "lunch":
+                route = "/(main)/(nutrition)/lunch";
+                break;
+              case "dinner":
+              case "diner":
+                route = "/(main)/(nutrition)/diner";
+                break;
+              default:
+                route = "/(main)/(nutrition)/days-meals";
+            }
+            return (
+              <MealCard
+                key={meal.id}
+                image={meal.image}
+                label={meal.label}
+                foods={meal.foods}
+                calories={meal.calories}
+                totalCalories={meal.totalCalories}
+                onPress={() => router.push(route as any)}
+              />
+            );
+          })}
         </View>
         <View style={styles.sectionTitleContainer}>
           <Text style={styles.sectionTitle}>Water</Text>
-          <TouchableOpacity style={styles.dotsButton}>
+          <TouchableOpacity
+          style={styles.dotsButton}>
             <View style={styles.dotsContainer}>
               <Text style={styles.dotsText}>...</Text>
             </View>
@@ -150,7 +143,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   scrollView: {
-    paddingTop: 80, // Account for top bar height
+    paddingTop: 60, // Account for top bar height
   },
   scrollContent: {
     paddingBottom: 84,
@@ -171,6 +164,7 @@ const styles = StyleSheet.create({
   },
   cardList: {
     marginHorizontal: 12,
+    // gap: 52,
   },
   dotsButton: {
     backgroundColor: "#173430",

@@ -19,7 +19,7 @@ const DescriptionCard: React.FC<DescriptionCardProps> = ({ progress }) => {
     return (
       <View style={styles.macroItem}>
         <View style={styles.macroHeader}>
-          <Text style={styles.macroValue}>{current}</Text>
+          <Text style={styles.macroValue}>{Number(current).toFixed(1)}</Text>
           <Text style={styles.macroUnit}>{unit}</Text>
         </View>
         <View style={styles.macroLabelContainer}>

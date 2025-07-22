@@ -37,7 +37,7 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeTab, onTabPress }) =>
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: "#173430",
+    backgroundColor: "#13332B",
     borderRadius: 24,
     paddingVertical: 16,
     paddingHorizontal: 16,

@@ -24,7 +24,7 @@ const MealCard: React.FC<MealCardProps> = ({ image, label, foods, calories, tota
         <Text style={styles.slash}>/</Text>
         <Text style={styles.totalCalories}>{totalCalories} kcal</Text>
       </View>
-      <Feather name="chevron-right" size={22} color="#22C55E" style={styles.chevron} />
+      <Feather name="chevron-right" size={24} color="#22C55E" style={styles.chevron} />
     </TouchableOpacity>
   );
 };

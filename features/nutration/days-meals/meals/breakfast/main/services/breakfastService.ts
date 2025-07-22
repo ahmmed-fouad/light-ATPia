@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { BreakfastData, BreakfastProgress, FoodItem } from '../types/breakfastTypes';
 
 const mockProgress: BreakfastProgress = {
@@ -99,4 +100,28 @@ export const addFoodItem = (item: FoodItem) => {
 export const removeFoodItem = (itemId: string) => {
   // Remove food item logic
   console.log('Removing food item:', itemId);
+};
+
+export const fetchFoods = async (searchTerm = 'breakfast') => {
+  const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(searchTerm)}&search_simple=1&action=process&json=1`;
+  const response = await axios.get(url);
+  // Map the API response to your FoodItem type, filter out items with no name
+  return response.data.products
+    .filter((product: any) => !!product.product_name)
+    .map((product: any) => ({
+      id: product.id || product._id || product.code,
+      name: product.product_name,
+      // the decimal is 2
+      kcal:
+        Number(Number(product.nutriments?.["energy-kcal_100g"]).toFixed(2)) ||
+        0,
+      protein:
+        Number(Number(product.nutriments?.["proteins_100g"]).toFixed(2)) || 0,
+      carbs:
+        Number(Number(product.nutriments?.["carbohydrates_100g"]).toFixed(2)) ||
+        0,
+      fat: Number(Number(product.nutriments?.["fat_100g"]).toFixed(2)) || 0,
+      image: product.image_url,
+      category: product.categories,
+    }));
 }; 

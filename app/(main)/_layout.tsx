@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
     minWidth: 85,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#173430",
+    backgroundColor: "#13332B",
     borderRadius: 30,
     paddingLeft: 2,
     position: "relative",
@@ -491,7 +491,7 @@ const styles = StyleSheet.create({
   },
   userProfileContainer: {
     // paddingLeft: 5,
-    backgroundColor: "#25443f",
+    backgroundColor: "#13332B",
     borderRadius: 30,
     // padding: 10,
     // marginRight: 10,
