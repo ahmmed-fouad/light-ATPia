@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons';
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BlurView } from 'expo-blur';
 import { CameraView, useCameraPermissions } from 'expo-camera';
@@ -9,8 +9,8 @@ import Svg, { Path } from 'react-native-svg';
 
 const { width, height } = Dimensions.get('window');
 const FRAME_SIZE = width * 0.8;
-const FRAME_HEIGHT = FRAME_SIZE + 90;
-// const FRAME_BORDER = 4;
+const FRAME_HEIGHT = FRAME_SIZE + 100;
+const FRAME_BORDER = 4;
 // const CARD_HEIGHT = 120;
 const FRAME_RADIUS = 24;
 
@@ -77,26 +77,36 @@ const FoodScannerScreen: React.FC = () => {
                 H0
                 V0
                 Z
-                M${(width - FRAME_SIZE) / 2},${(height - FRAME_HEIGHT) / 3 + FRAME_RADIUS}
-                a${FRAME_RADIUS},${FRAME_RADIUS} 0 0 1 ${FRAME_RADIUS},-${FRAME_RADIUS}
-                h${FRAME_SIZE - 2 * FRAME_RADIUS}
-                a${FRAME_RADIUS},${FRAME_RADIUS} 0 0 1 ${FRAME_RADIUS},${FRAME_RADIUS}
-                v${FRAME_HEIGHT - 2 * FRAME_RADIUS}
-                a${FRAME_RADIUS},${FRAME_RADIUS} 0 0 1 -${FRAME_RADIUS},${FRAME_RADIUS}
-                h-${FRAME_SIZE - 2 * FRAME_RADIUS}
-                a${FRAME_RADIUS},${FRAME_RADIUS} 0 0 1 -${FRAME_RADIUS},-${FRAME_RADIUS}
+                M${(width - FRAME_SIZE) / 2 + FRAME_BORDER},${(height - FRAME_HEIGHT) / 3.07 + FRAME_BORDER + (FRAME_RADIUS - FRAME_BORDER)}
+                a${FRAME_RADIUS - FRAME_BORDER},${FRAME_RADIUS - FRAME_BORDER} 0 0 1 ${FRAME_RADIUS - FRAME_BORDER},-${FRAME_RADIUS - FRAME_BORDER}
+                h${FRAME_SIZE - 2 * FRAME_BORDER - 2 * (FRAME_RADIUS - FRAME_BORDER)}
+                a${FRAME_RADIUS - FRAME_BORDER},${FRAME_RADIUS - FRAME_BORDER} 0 0 1 ${FRAME_RADIUS - FRAME_BORDER},${FRAME_RADIUS - FRAME_BORDER}
+                v${FRAME_HEIGHT - 2 * FRAME_BORDER - 2 * (FRAME_RADIUS - FRAME_BORDER)}
+                a${FRAME_RADIUS - FRAME_BORDER},${FRAME_RADIUS - FRAME_BORDER} 0 0 1 -${FRAME_RADIUS - FRAME_BORDER},${FRAME_RADIUS - FRAME_BORDER}
+                h-${FRAME_SIZE - 2 * FRAME_BORDER - 2 * (FRAME_RADIUS - FRAME_BORDER)}
+                a${FRAME_RADIUS - FRAME_BORDER},${FRAME_RADIUS - FRAME_BORDER} 0 0 1 -${FRAME_RADIUS - FRAME_BORDER},-${FRAME_RADIUS - FRAME_BORDER}
                 z
               `}
             />
           </Svg>
         }
       >
-        <BlurView
-          style={StyleSheet.absoluteFill}
-          intensity={100}
-          tint="light"
-          pointerEvents="none"
-        />
+        <>
+          <BlurView
+            style={StyleSheet.absoluteFill}
+            intensity={50}
+            tint="light"
+            pointerEvents="none"
+          />
+          <View
+            pointerEvents="none"
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              backgroundColor: "#90a0a0",
+              opacity: 0.55,
+            }}
+          />
+        </>
       </MaskedView>
       {/* Overlay UI */}
       <View style={styles.overlay} pointerEvents="box-none">
@@ -110,13 +120,20 @@ const FoodScannerScreen: React.FC = () => {
           </TouchableOpacity>
           <Text style={styles.title}>Scan meal</Text>
           <TouchableOpacity
-            style={styles.iconBtn}
+            style={[
+              
+              {
+                backgroundColor: flash === "torch" ? "#ff8c39" : "#fff",
+                padding: 15,
+                borderRadius: 44,
+              },
+            ]}
             onPress={() => setFlash(flash === "off" ? "torch" : "off")}
           >
-            <Feather
-              name="zap"
+            <MaterialCommunityIcons
+              name={flash === "torch" ? "flash" : "flash-off"}
               size={28}
-              color={flash === "torch" ? "#ff9800" : "#173430"}
+              color={flash === "torch" ? "#fff" : "#ff8c39"}
             />
           </TouchableOpacity>
         </View>
@@ -149,7 +166,9 @@ const FoodScannerScreen: React.FC = () => {
                 <Text style={styles.foodName}>Chicken thigh</Text>
                 <Text style={styles.serving}>1 serving</Text>
                 <View style={styles.macrosRow}>
-                  <Text style={[styles.macro, { color: "#22c55e" }]}>152 kcal</Text>
+                  <Text style={[styles.macro, { color: "#22c55e" }]}>
+                    152 kcal
+                  </Text>
                   <Text style={[styles.macro, { color: "#f472b6" }]}>0 g</Text>
                   <Text style={[styles.macro, { color: "#fbbf24" }]}>8 g</Text>
                   <Text style={[styles.macro, { color: "#8b5cf6" }]}>13 g</Text>
@@ -197,9 +216,8 @@ const styles = StyleSheet.create({
     // marginBottom: 2,
   },
   iconBtn: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    padding: 15,
+    borderRadius: 44,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
