@@ -16,7 +16,7 @@ const PlansGrid: React.FC = () => {
           onPress={() => setSelected(plan.id)}
           style={{
             marginBottom: idx === plans.length - 1 ? 0 : 18,
-            borderRadius: 24,
+            borderRadius: 28,
             overflow: 'hidden',
           }}
         >

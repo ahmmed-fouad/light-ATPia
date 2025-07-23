@@ -10,8 +10,8 @@ const BreakfastHeader = () => {
   };
 
   const handleScannerPress = () => {
-    // TODO: Navigate to food scanner
-    console.log('Scanner pressed');
+    // Navigate to the food scanner screen (update the path as needed for your router setup)
+    router.push('/food-scanner');
   };
 
   return (
@@ -20,7 +20,6 @@ const BreakfastHeader = () => {
           <Feather name="chevron-left" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.title}>Breakfast</Text>
-      
       <TouchableOpacity style={styles.scannerButton} onPress={handleScannerPress}>
         <Feather name="camera" size={24} color="#fff" />
       </TouchableOpacity>
@@ -44,7 +43,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 20,
-    borderRadius: 30,
+    borderRadius: 40,
     backgroundColor: "#18b888",
     alignItems: "center",
     justifyContent: "center",
@@ -57,7 +56,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-
     fontWeight: "700",
     color: "#173430",
   },
@@ -65,7 +63,7 @@ const styles = StyleSheet.create({
     // width: 48,
     // height: 48,
     padding: 20,
-    borderRadius: 30,
+    borderRadius: 40,
     backgroundColor: "#18b888",
     alignItems: "center",
     justifyContent: "center",

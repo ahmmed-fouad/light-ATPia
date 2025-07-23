@@ -7,10 +7,19 @@ interface SelectPlanButtonProps {
 }
 
 const SelectPlanButton: React.FC<SelectPlanButtonProps> = ({ onPress }) => (
-  <TouchableOpacity style={styles.button} onPress={onPress} activeOpacity={0.85}>
+  <TouchableOpacity
+    style={styles.button}
+    onPress={onPress}
+    activeOpacity={0.85}
+  >
     <View style={styles.row}>
       <Text style={styles.text}>Select plan</Text>
-      <FontAwesome5 name="arrow-right" size={22} color="#18b888" style={{ marginLeft: 8 }} />
+      <FontAwesome5
+        name="chevron-right"
+        size={22}
+        color="#18b888"
+        // style={{ marginLeft: 8 }}
+      />
     </View>
   </TouchableOpacity>
 );
@@ -18,9 +27,9 @@ const SelectPlanButton: React.FC<SelectPlanButtonProps> = ({ onPress }) => (
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#173430',
-    borderRadius: 18,
-    paddingVertical: 18,
-    paddingHorizontal: 24,
+    borderRadius: 38,
+    paddingVertical: 22,
+    paddingHorizontal: 28,
     alignItems: 'center',
     marginTop: 18,
     marginBottom: 12,
@@ -30,6 +39,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
+    // backgroundColor: 'red',
+    width: '100%',
     justifyContent: 'space-between',
   },
   text: {

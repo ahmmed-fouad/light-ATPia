@@ -156,6 +156,7 @@ const MainLayout = () => {
       "/lunch": "nutrition",
       "/diner": "nutrition",
       "/personal-program": "nutrition",
+      "/food-scanner": "nutrition",
     };
 
     for (const [screen, tab] of Object.entries(screenToTab)) {

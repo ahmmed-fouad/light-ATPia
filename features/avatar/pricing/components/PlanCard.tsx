@@ -7,16 +7,13 @@ interface PlanCardProps {
   selected?: boolean;
 }
 
-const deepBg = '#173430';
-const deepText = '#fff';
-const deepIcon = '#bce2bd';
-
 const PlanCard: React.FC<PlanCardProps> = ({ plan, selected }) => {
-  const bgColor = selected ? deepBg : plan.bgColor;
-  const textColor = selected ? deepText : plan.textColor;
-  const iconColor = selected ? deepIcon : plan.iconColor;
+  const bgColor = selected ? "#ffe8d8" : "#f7f7f7";
+  const textColor = selected ? "#000" : "#000";
+  const iconColor = selected ? "#000" : "#000";
+
   return (
-    <View style={[styles.card, { backgroundColor: bgColor, borderColor: selected ? '#18b888' : 'transparent', borderWidth: selected ? 2 : 0 }]}> 
+    <View style={[styles.card, { backgroundColor: bgColor, borderColor: selected ? '#18b888' : 'transparent'}]}> 
       <View style={styles.row}>
         <View style={styles.infoSection}>
           <Text style={[styles.name, { color: textColor }]}>{plan.name}</Text>
