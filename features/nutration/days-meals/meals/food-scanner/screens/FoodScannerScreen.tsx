@@ -1,15 +1,18 @@
 import { Feather } from '@expo/vector-icons';
+import MaskedView from '@react-native-masked-view/masked-view';
 import { BlurView } from 'expo-blur';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import { Animated, Dimensions, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 
 const { width, height } = Dimensions.get('window');
 const FRAME_SIZE = width * 0.8;
-const FRAME_HEIGHT = FRAME_SIZE + 100;
-const FRAME_BORDER = 4;
-const CARD_HEIGHT = 120;
+const FRAME_HEIGHT = FRAME_SIZE + 90;
+// const FRAME_BORDER = 4;
+// const CARD_HEIGHT = 120;
+const FRAME_RADIUS = 24;
 
 const FoodScannerScreen: React.FC = () => {
   const router = useRouter();
@@ -59,13 +62,44 @@ const FoodScannerScreen: React.FC = () => {
         facing="back"
         ratio={Platform.OS === "ios" ? "16:9" : undefined}
       />
-      {/* Overlay */}
+      {/* Masked Blur Overlay with SVG mask */}
+      <MaskedView
+        style={StyleSheet.absoluteFill}
+        maskElement={
+          <Svg width={width} height={height}>
+            <Path
+              fill="white"
+              fillRule="evenodd"
+              d={`
+                M0,0
+                H${width}
+                V${height}
+                H0
+                V0
+                Z
+                M${(width - FRAME_SIZE) / 2},${(height - FRAME_HEIGHT) / 3 + FRAME_RADIUS}
+                a${FRAME_RADIUS},${FRAME_RADIUS} 0 0 1 ${FRAME_RADIUS},-${FRAME_RADIUS}
+                h${FRAME_SIZE - 2 * FRAME_RADIUS}
+                a${FRAME_RADIUS},${FRAME_RADIUS} 0 0 1 ${FRAME_RADIUS},${FRAME_RADIUS}
+                v${FRAME_HEIGHT - 2 * FRAME_RADIUS}
+                a${FRAME_RADIUS},${FRAME_RADIUS} 0 0 1 -${FRAME_RADIUS},${FRAME_RADIUS}
+                h-${FRAME_SIZE - 2 * FRAME_RADIUS}
+                a${FRAME_RADIUS},${FRAME_RADIUS} 0 0 1 -${FRAME_RADIUS},-${FRAME_RADIUS}
+                z
+              `}
+            />
+          </Svg>
+        }
+      >
+        <BlurView
+          style={StyleSheet.absoluteFill}
+          intensity={100}
+          tint="light"
+          pointerEvents="none"
+        />
+      </MaskedView>
+      {/* Overlay UI */}
       <View style={styles.overlay} pointerEvents="box-none">
-        {/* Blur overlays */}
-        <BlurView intensity={100} style={[styles.blur, styles.blurTop]} />
-        <BlurView intensity={100} style={[styles.blur, styles.blurBottom]} />
-        <BlurView intensity={100} style={[styles.blur, styles.blurLeft]} />
-        <BlurView intensity={100} style={[styles.blur, styles.blurRight]} />
         {/* Top Bar */}
         <View style={styles.topBar}>
           <TouchableOpacity
@@ -115,9 +149,7 @@ const FoodScannerScreen: React.FC = () => {
                 <Text style={styles.foodName}>Chicken thigh</Text>
                 <Text style={styles.serving}>1 serving</Text>
                 <View style={styles.macrosRow}>
-                  <Text style={[styles.macro, { color: "#22c55e" }]}>
-                    152 kcal
-                  </Text>
+                  <Text style={[styles.macro, { color: "#22c55e" }]}>152 kcal</Text>
                   <Text style={[styles.macro, { color: "#f472b6" }]}>0 g</Text>
                   <Text style={[styles.macro, { color: "#fbbf24" }]}>8 g</Text>
                   <Text style={[styles.macro, { color: "#8b5cf6" }]}>13 g</Text>
@@ -199,7 +231,7 @@ const styles = StyleSheet.create({
     // borderWidth: FRAME_BORDER, // Remove full border
     // borderColor: '#fff',
     overflow: 'hidden',
-    backgroundColor: 'rgba(255, 255, 255, 0.17)',
+    backgroundColor: 'rgba(255, 255, 255, 0)',
   },
   scanLine: {
     position: 'absolute',
@@ -327,6 +359,11 @@ const styles = StyleSheet.create({
     right: 0,
     width: (width - FRAME_SIZE) / 2,
     height: FRAME_HEIGHT-2.5,
+  },
+  maskHole: {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    // The rest is set inline
   },
 });
 
