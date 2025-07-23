@@ -17,7 +17,7 @@ const FRAME_RADIUS = 24;
 const FoodScannerScreen: React.FC = () => {
   const router = useRouter();
   const [permission, requestPermission] = useCameraPermissions();
-  const [flash, setFlash] = useState<'off' | 'on' | 'auto' | 'torch'>('off');
+  const [torch, setTorch] = useState(false);
   const [objectFound, setObjectFound] = useState(false); // Simulate detection
   const scanAnim = useRef(new Animated.Value(0)).current;
 
@@ -61,6 +61,7 @@ const FoodScannerScreen: React.FC = () => {
         style={StyleSheet.absoluteFill}
         facing="back"
         ratio={Platform.OS === "ios" ? "16:9" : undefined}
+        enableTorch={torch}
       />
       {/* Masked Blur Overlay with SVG mask */}
       <MaskedView
@@ -77,7 +78,7 @@ const FoodScannerScreen: React.FC = () => {
                 H0
                 V0
                 Z
-                M${(width - FRAME_SIZE) / 2 + FRAME_BORDER},${(height - FRAME_HEIGHT) / 3.07 + FRAME_BORDER + (FRAME_RADIUS - FRAME_BORDER)}
+                M${(width - FRAME_SIZE) / 2 + FRAME_BORDER},${(height - FRAME_HEIGHT) / 2.7 + FRAME_BORDER + (FRAME_RADIUS - FRAME_BORDER)}
                 a${FRAME_RADIUS - FRAME_BORDER},${FRAME_RADIUS - FRAME_BORDER} 0 0 1 ${FRAME_RADIUS - FRAME_BORDER},-${FRAME_RADIUS - FRAME_BORDER}
                 h${FRAME_SIZE - 2 * FRAME_BORDER - 2 * (FRAME_RADIUS - FRAME_BORDER)}
                 a${FRAME_RADIUS - FRAME_BORDER},${FRAME_RADIUS - FRAME_BORDER} 0 0 1 ${FRAME_RADIUS - FRAME_BORDER},${FRAME_RADIUS - FRAME_BORDER}
@@ -121,19 +122,18 @@ const FoodScannerScreen: React.FC = () => {
           <Text style={styles.title}>Scan meal</Text>
           <TouchableOpacity
             style={[
-              
               {
-                backgroundColor: flash === "torch" ? "#ff8c39" : "#fff",
+                backgroundColor: torch ? "#ff8c39" : "#fff",
                 padding: 15,
                 borderRadius: 44,
               },
             ]}
-            onPress={() => setFlash(flash === "off" ? "torch" : "off")}
+            onPress={() => setTorch(t => !t)}
           >
             <MaterialCommunityIcons
-              name={flash === "torch" ? "flash" : "flash-off"}
+              name={torch ? "flash" : "flash-off"}
               size={28}
-              color={flash === "torch" ? "#fff" : "#ff8c39"}
+              color={torch ? "#fff" : "#ff8c39"}
             />
           </TouchableOpacity>
         </View>
