@@ -10,7 +10,7 @@ import {
   FoodItemCard,
   SearchBar
 } from '../components';
-import { fetchFoods } from '../services/breakfastService';
+import { fetchFoodsPage } from '../services/breakfastService';
 import { useBreakfastStore } from '../stores/breakfastStore';
 import { FoodItem } from '../types/breakfastTypes';
 
@@ -29,6 +29,9 @@ const BreakfastScreen = () => {
   const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const pageSize = 20;
 
   // Helper to get today's 08:00 AM as a Date
   const getToday8AM = () => {
@@ -165,15 +168,19 @@ const BreakfastScreen = () => {
     });
   }, [doneProgress]);
 
-  // Fetch real food data on mount and when searchQuery changes
+  // Fetch first page on mount and when searchQuery changes
   useEffect(() => {
     let isMounted = true;
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       try {
-        const items = await fetchFoods(searchQuery || 'breakfast');
-        if (isMounted) setFoodItems(items);
+        const { products, totalCount } = await fetchFoodsPage(searchQuery || 'breakfast', 1, pageSize);
+        if (isMounted) {
+          setFoodItems(products);
+          setTotalCount(totalCount);
+          setPage(1);
+        }
       } catch (e) {
         if (isMounted) setError('Failed to fetch foods');
       } finally {
@@ -183,6 +190,20 @@ const BreakfastScreen = () => {
     fetchData();
     return () => { isMounted = false; };
   }, [searchQuery]);
+
+  // Load more handler
+  const handleLoadMore = async () => {
+    setLoading(true);
+    try {
+      const { products } = await fetchFoodsPage(searchQuery || 'breakfast', page + 1, pageSize);
+      setFoodItems(prev => [...prev, ...products]);
+      setPage(prev => prev + 1);
+    } catch {
+      setError('Failed to fetch more foods');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAddFood = () => {
     // TODO: Implement add food functionality
@@ -212,8 +233,10 @@ const BreakfastScreen = () => {
     );
   };
 
-  // Filter food items based on search query
-  const filteredItems = foodItems;
+  // Filter food items based on search query (client-side substring match)
+  const filteredItems = foodItems.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.trim().toLowerCase())
+  );
   const isSearching = searchQuery.length > 0;
 
   return (
@@ -361,6 +384,25 @@ const BreakfastScreen = () => {
                 onEdit={() => handleAddToChosen(item)}
               />
             ))}
+            {/* Load more button */}
+            {filteredItems.length < totalCount && (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#18b888',
+                  paddingVertical: 12,
+                  paddingHorizontal: 32,
+                  borderRadius: 22,
+                  alignSelf: 'center',
+                  marginVertical: 18,
+                }}
+                onPress={handleLoadMore}
+                disabled={loading}
+              >
+                <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
+                  {loading ? 'Loading...' : 'Load more'}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </ScrollView>
       </ScrollAwareView>

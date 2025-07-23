@@ -130,4 +130,27 @@ export const fetchFoods = async (searchTerm = 'breakfast') => {
     return true;
   });
   return uniqueProducts;
+};
+
+export const fetchFoodsPage = async (searchTerm = 'breakfast', page = 1, pageSize = 20) => {
+  const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(searchTerm)}&search_simple=1&action=process&json=1&lc=en&fields=code,product_name_en,image_url,nutriments,categories&page=${page}&page_size=${pageSize}`;
+  const response = await axios.get(url, {
+    headers: {
+      'User-Agent': 'ATPiaApp/1.0 (your@email.com)'
+    }
+  });
+  const products = response.data.products
+    .filter((product: any) => !!product.product_name_en && typeof product.product_name_en === 'string' && product.product_name_en.trim().length > 0)
+    .map((product: any) => ({
+      id: product.code,
+      name: product.product_name_en.trim(),
+      kcal: Number(Number(product.nutriments?.["energy-kcal_100g"]).toFixed(2)) || 0,
+      protein: Number(Number(product.nutriments?.["proteins_100g"]).toFixed(2)) || 0,
+      carbs: Number(Number(product.nutriments?.["carbohydrates_100g"]).toFixed(2)) || 0,
+      fat: Number(Number(product.nutriments?.["fat_100g"]).toFixed(2)) || 0,
+      image: product.image_url,
+      category: product.categories,
+    }));
+  const totalCount = response.data.count || 0;
+  return { products, totalCount };
 }; 
